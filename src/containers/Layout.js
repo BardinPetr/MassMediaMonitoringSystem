@@ -3,7 +3,7 @@ import {Layout} from "antd";
 
 const {Content} = Layout;
 
-class CustomLayout extends React.Component {
+class BaseLayout extends React.Component {
     render() {
         return (
             <Layout className="layout" style={{background: "#111", height: "100%"}}>
@@ -15,4 +15,4 @@ class CustomLayout extends React.Component {
     }
 }
 
-export default CustomLayout;
+export default BaseLayout;
