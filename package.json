@@ -1,0 +1,40 @@
+{
+  "name": "django-react-boilerplate",
+  "version": "0.2.0",
+  "private": true,
+  "dependencies": {
+    "antd": "^3.7.3",
+    "axios": "^0.18.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.4",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
+    "global": "^4.3.0",
+    "kepler.gl": "^0.1.6",
+    "react-palm": "^1.1.2",
+    "react-router": "^3.0.5",
+    "react-router-redux": "^4.0.8",
+    "react-virtualized": "^9.18.5",
+    "redux-actions": "^2.2.1"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --mode development --open --hot",
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production"
+  },
+  "devDependencies": {
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.4",
+    "babel-plugin-inline-json-import": "^0.2.1",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.0.0",
+    "style-loader": "^0.23.1"
+  }
+}
