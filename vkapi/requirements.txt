@@ -1,0 +1,6 @@
+pytz
+vk
+numpy
+pandas
+datetime
+vk_api
