@@ -28,13 +28,13 @@ module.exports = {
                 "type": "sequential",
                 "category": "Uber",
                 "colors": [
-                  "#00FF00",
-                  "#74FF00",
-                  "#96FF00",
-                  "#FFC300",
-                  "#FF9600",
+                  "#FF0000",
                   "#FF7400",
-                  "#FF0000"
+                  "#FF9600",
+                  "#FFC300",
+                  "#94C300",
+                  "#35C300",
+                  "#00FF00"
                 ]
               },
               "radiusRange": [

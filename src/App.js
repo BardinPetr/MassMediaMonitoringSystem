@@ -1,6 +1,7 @@
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import React, {Component} from "react";
 import {connect} from 'react-redux';
+import { FaBeer } from 'react-icons/fa';
 
 import {addDataToMap} from 'kepler.gl/actions';
 import KeplerGl from 'kepler.gl';
@@ -10,13 +11,16 @@ import "antd/dist/antd.css";
 
 import mapConfig from "./data/map_config"
 
+import SearchField from "react-search-field";
+
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiZ29sZGZvcjEiLCJhIjoiY2p4bGtncjZ3MDZoYjNzcWhuM2J0dWM1ZyJ9.y2_uVrkzdNmjkXnsvw_xdA'; // eslint-disable-line
 
 class App extends Component {
+
     componentDidMount() {
         this.publishData({})
     }
-
+    
     publishData(data) {
         this.props.dispatch(
             addDataToMap({
@@ -37,9 +41,15 @@ class App extends Component {
     }
 
     render() {
+
         return (
             <div style={{position: 'absolute', width: '100%', height: '100%', minHeight: '70vh'}}>
-                <Button onClick={this.publishData}>Replace Data</Button>
+                <input className="react-search-field-input" placeholder="  Search..." type="text" 
+                style={{outline: 'none', border: 'none'}}
+                onEnter={(q,e) => {console.log(e);}}
+                onChangeText={(text) => this.setState({text})}
+                />
+                <Button onClick={this.publishData}><FaBeer/></Button>
                 <AutoSizer>
                     {({height, width}) => (
                         <KeplerGl
