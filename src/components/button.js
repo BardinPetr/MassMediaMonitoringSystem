@@ -12,7 +12,6 @@ const buttonStyle = {
   cursor: 'pointer',
   border: 0,
   fontSize: '13px',
-  margin:'14px 12px 0px 0px',
   align: 'center',
   alingItem: 'center',
   borderRadius: '18px',
