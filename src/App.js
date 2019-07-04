@@ -1,12 +1,13 @@
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import React, {Component} from "react";
 import {connect} from 'react-redux';
-import { FaBeer } from 'react-icons/fa';
+import ReactDOM from 'react-dom';
 
 import {addDataToMap} from 'kepler.gl/actions';
 import KeplerGl from 'kepler.gl';
 
 import Button from './components/button';
+import Search from './components/SearchBar';
 import "antd/dist/antd.css";
 
 import mapConfig from "./data/map_config"
@@ -40,16 +41,15 @@ class App extends Component {
         );
     }
 
+    buttonPressed(data, e){
+        console.log('Data search', data);
+        //axios regiest with data
+        //send dataBase to publishData(dataBase)
+    }
     render() {
-
         return (
             <div style={{position: 'absolute', width: '100%', height: '100%', minHeight: '70vh'}}>
-                <input className="react-search-field-input" placeholder="  Search..." type="text" 
-                style={{outline: 'none', border: 'none'}}
-                onEnter={(q,e) => {console.log(e);}}
-                onChangeText={(text) => this.setState({text})}
-                />
-                <Button onClick={this.publishData}><FaBeer/></Button>
+                <Search Ref={this.buttonPressed}>Search...</Search>
                 <AutoSizer>
                     {({height, width}) => (
                         <KeplerGl

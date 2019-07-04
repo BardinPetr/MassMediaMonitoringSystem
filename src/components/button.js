@@ -20,7 +20,10 @@ const buttonStyle = {
 
 const Button = ({onClick, children}) => (
   <IconContext.Provider value={{ color: "white", size: 18}}>
-    <button style={buttonStyle} onClick={onClick}><div align='center'>{children}</div></button>
+    <button style={buttonStyle} 
+      onClick={onClick}>
+        <div align='center'>{children}
+        </div></button>
   </IconContext.Provider>
 );
 
