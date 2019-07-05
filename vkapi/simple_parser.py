@@ -3,7 +3,7 @@ import vk
 
 
 class VKAPI():
-    def __init__(self, version):
+    def __init__(self, version="9.52"):
         self.version = version
         session = vk.AuthSession(app_id=options.ID, user_login=options.LOGIN,
                                  user_password=options.PASSWORD,
@@ -22,3 +22,5 @@ class VKAPI():
     def get_post(self, quest, count):
         newsfeed = self.vkapi.newsfeed.search(q=quest, count=count, filters='post ', v=self.version)
         return [(self.create_structure(newsfeed['items'][i])) for i in range(count)]
+
+print(VKAPI().get_post("привет",200))
