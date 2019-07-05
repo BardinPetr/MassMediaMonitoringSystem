@@ -27,7 +27,7 @@ class YandexNews(object):
     def __init__(self):
         """Constructor"""
 
-    def GetNews(self, x):
+    def Get_News(self, x):
         """
         x - number of region
         :param x:
@@ -46,10 +46,20 @@ class YandexNews(object):
         News = []
         r = requests.get('https://news.yandex.ru/' + RegList[x] + '/index.rss')
         root = ET.fromstring(r.text)
-        for i in range(0, 10):
+        for i in range(0, 5):
             News.append([root[0][i + 5][0].text, root[0][i + 5][3].text])
         return News
 
+    def Get_All_News(self):
+        """
+        function return all news of Russia
+        ~800 news
+        """
+        Bnews = []
+        for i in range(80):
+            Bnews.append(self.Get_News(i))
+        return Bnews
+
 if __name__ == "__main__":
     d = YandexNews()
-    print(d.GetNews(4))
+    print(d.Get_All_News())
