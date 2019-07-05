@@ -1,12 +1,12 @@
-import options
+import vkapi.options
 import vk
 
 
 class VKAPI():
-    def __init__(self, version):
+    def __init__(self, version="5.92"):
         self.version = version
-        session = vk.AuthSession(app_id=options.ID, user_login=options.LOGIN,
-                                 user_password=options.PASSWORD,
+        session = vk.AuthSession(app_id=vkapi.options.ID, user_login=vkapi.options.LOGIN,
+                                 user_password=vkapi.options.PASSWORD,
                                  scope='wall, fields, messages')
         self.vkapi = vk.API(session)
 
