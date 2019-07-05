@@ -1,23 +1,30 @@
 import React from 'react';
+import { IconContext } from "react-icons";
 
 const buttonStyle = {
   position: 'absolute',
   zIndex: 100,
-  bottom: 0,
   right: 0,
-  width: '120px',
-  height: '40px',
-  backgroundColor: '#1f7cf4',
+  width: '36px',
+  height: '36px',
+  backgroundColor: '#6A7485',
   color: '#FFFFFF',
   cursor: 'pointer',
   border: 0,
-  borderRadius: '3px',
-  fontSize: '12px',
-  margin:'30px',
+  fontSize: '13px',
+  align: 'center',
+  alingItem: 'center',
+  borderRadius: '18px',
 };
 
 const Button = ({onClick, children}) => (
-  <button style={buttonStyle} onClick={onClick}>{children}</button>
+  <IconContext.Provider value={{ color: "white", size: 18}}>
+    <button style={buttonStyle} 
+      onClick={onClick}>
+        <div align='center'>{children}
+        </div></button>
+  </IconContext.Provider>
 );
+
 
 export default Button;
