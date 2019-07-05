@@ -51,9 +51,12 @@ class YandexNews(object):
         """
         News = []
         r = requests.get('https://news.yandex.ru/' + RegList[x] + '/index.rss')
-        root = ET.fromstring(r.text)
-        for i in range(0, 5):
-            News.append({"head": root[0][i + 5][0].text, "text": root[0][i + 5][3].text})
+        if r.status_code == 200:
+            root = ET.fromstring(r.text)
+            for i in range(0, 5):
+                News.append({"head": root[0][i + 5][0].text, "text": root[0][i + 5][3].text,
+                             "date": root[0][i + 5][4].text[0:-15]})
+
         return News
 
     def get_all_news(self):
@@ -69,4 +72,5 @@ class YandexNews(object):
 
 if __name__ == "__main__":
     d = YandexNews()
-    print(d.get_all_news())
+    # print(d.get_all_news())
+    print(d.get_news(0))
