@@ -53,7 +53,7 @@ class YandexNews(object):
         r = requests.get('https://news.yandex.ru/' + RegList[x] + '/index.rss')
         root = ET.fromstring(r.text)
         for i in range(0, 5):
-            News.append({"head": root[0][i + 5][0].text, "text": root[0][i + 5][3].text})
+            News.append({"head":root[0][i + 5][0].text, "text":root[0][i + 5][3].text})
         return News
 
     def get_all_news(self):
