@@ -1,7 +1,6 @@
-import requests, re
-import time
-
 import xml.etree.ElementTree as ET
+
+import requests
 
 '''
 urlist = {'https://news.yandex.ru/Moscow/index.rss': 'data-counter=".*">(.*?)</title>'}
@@ -10,14 +9,21 @@ for i in urlist.keys():
     Hedears.append(get_news(i, urlist[i]))
 '''
 RegList = ['Barnaul', 'Blagoveshchensk', 'Arhangelsk', 'Astrahan', 'Belgorod',
-    'Bryansk', 'Vladimir', 'Volgograd', 'Vologda', 'Voronezh', 'Birobidgan', 'Chita', 'Ivanovo', 'Irkutsk', 'Nalchik', 'Kaliningrad', 'Kaluga',
-    'Petropavlovsk', 'Cherkessk', 'Kemerovo', 'Kirov', 'Kostroma', 'Krasnodar', 'Krasnoyarsk', 'Kurgan', 'Kursk',
-    'Saint-Petersburg_and_Leningrad_Oblast', 'Lipetsk', 'Moscow', 'Moscow_and_Moscow_Oblast', 'Murmansk', 'Magadan', 'Nizhny_Novgorod',
-    'Veliky_Novgorod', 'Novosibirsk', 'Omsk', 'Orenburg', 'Orel', 'Penza', 'Perm', 'Vladivostok', 'Pskov', 'Maykop', 'Gorno-Altaysk', 'Ufa',
-    'Ulan-Ude', 'Makhachkala', 'Republic_of_Ingushetia', 'Petrozavodsk', 'Syktyvkar', 'Republic_of_Crimea', 'Yoshkar-Ola', 'Saransk',
-    'Yakutsk', 'Vladikavkaz', 'Kazan', 'Abakan', 'Rostov-na-Donu', 'Ryazan', 'Samara', 'Saint_Petersburg', 'Saratov', 'Yuzhno-Sakhalinsk',
-    'Yekaterinburg', 'Sevastopol', 'Smolensk', 'Stavropol', 'Tambov', 'Tver', 'Tomsk', 'Tula', 'Tyumen', 'Izhevsk', 'Ulyanovsk', 'Khabarovsk',
-    'Khanty-Mansiysk', 'Chelyabinsk', 'Grozniy', 'Cheboksary', 'Salekhard', 'Yaroslavl']
+           'Bryansk', 'Vladimir', 'Volgograd', 'Vologda', 'Voronezh', 'Birobidgan', 'Chita', 'Ivanovo', 'Irkutsk',
+           'Nalchik', 'Kaliningrad', 'Kaluga',
+           'Petropavlovsk', 'Cherkessk', 'Kemerovo', 'Kirov', 'Kostroma', 'Krasnodar', 'Krasnoyarsk', 'Kurgan', 'Kursk',
+           'Saint-Petersburg_and_Leningrad_Oblast', 'Lipetsk', 'Moscow', 'Moscow_and_Moscow_Oblast', 'Murmansk',
+           'Magadan', 'Nizhny_Novgorod',
+           'Veliky_Novgorod', 'Novosibirsk', 'Omsk', 'Orenburg', 'Orel', 'Penza', 'Perm', 'Vladivostok', 'Pskov',
+           'Maykop', 'Gorno-Altaysk', 'Ufa',
+           'Ulan-Ude', 'Makhachkala', 'Republic_of_Ingushetia', 'Petrozavodsk', 'Syktyvkar', 'Republic_of_Crimea',
+           'Yoshkar-Ola', 'Saransk',
+           'Yakutsk', 'Vladikavkaz', 'Kazan', 'Abakan', 'Rostov-na-Donu', 'Ryazan', 'Samara', 'Saint_Petersburg',
+           'Saratov', 'Yuzhno-Sakhalinsk',
+           'Yekaterinburg', 'Sevastopol', 'Smolensk', 'Stavropol', 'Tambov', 'Tver', 'Tomsk', 'Tula', 'Tyumen',
+           'Izhevsk', 'Ulyanovsk', 'Khabarovsk',
+           'Khanty-Mansiysk', 'Chelyabinsk', 'Grozniy', 'Cheboksary', 'Salekhard', 'Yaroslavl']
+
 
 class YandexNews(object):
     """YandexNews resive
@@ -27,7 +33,7 @@ class YandexNews(object):
     def __init__(self):
         """Constructor"""
 
-    def Get_News(self, x):
+    def get_news(self, x):
         """
         x - number of region
         :param x:
@@ -47,19 +53,20 @@ class YandexNews(object):
         r = requests.get('https://news.yandex.ru/' + RegList[x] + '/index.rss')
         root = ET.fromstring(r.text)
         for i in range(0, 5):
-            News.append([root[0][i + 5][0].text, root[0][i + 5][3].text])
+            News.append({"head": root[0][i + 5][0].text, "text": root[0][i + 5][3].text})
         return News
 
-    def Get_All_News(self):
+    def get_all_news(self):
         """
         function return all news of Russia
         ~800 news
         """
         Bnews = []
-        for i in range(80):
-            Bnews.append(self.Get_News(i))
+        for i in range(81):
+            Bnews += self.get_news(i)
         return Bnews
+
 
 if __name__ == "__main__":
     d = YandexNews()
-    print(d.Get_All_News())
+    print(d.get_all_news())
