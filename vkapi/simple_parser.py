@@ -39,7 +39,7 @@ class VKAPI():
                     if k[i]["text"] != '':
                         a.append({"text":k[i]["text"],"owner_id":owner_id,"post_id":post_id,"number":i})
                     else:
-                        a.append(error())
+                        return error()
                 return a
             except:
                 return error()
