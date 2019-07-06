@@ -8,6 +8,7 @@ class DB:
         self.mydb = self.myclient["mydatabase"]
         self.posts_collection = self.mydb["Posts"]
         self.news_collection = self.mydb["News"]
+        self.comments_collection = self.mydb["Comments"]
 
     def add_posts(self, mylist):
         return self.posts_collection.insert_many(mylist).inserted_ids
@@ -20,3 +21,9 @@ class DB:
 
     def get_news(self):
         return list(self.news_collection.find())
+
+    def add_comments(self, mylist):
+        return self.comments_collection.insert_many(mylist).inserted_ids
+
+    def get_comments(self):
+        return list(self.comments_collection.find())

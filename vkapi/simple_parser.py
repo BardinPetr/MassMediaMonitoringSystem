@@ -1,5 +1,6 @@
-import vkapi.options
 import vk
+
+import vkapi.options
 
 
 class VKAPI():
