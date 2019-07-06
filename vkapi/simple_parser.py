@@ -1,8 +1,7 @@
-<<<<<<< HEAD
-=======
+
 import options
 import time
->>>>>>> vkapi
+ vkapi
 import vk
 
 import vkapi.options
