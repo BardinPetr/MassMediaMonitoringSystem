@@ -1,18 +1,10 @@
-
-import options
-import time
- vkapi
-import vk
-
 import vkapi.options
+import time
+import vk
 
 
 class VKAPI():
-<<<<<<< HEAD
-    def __init__(self, version="5.92"):
-=======
     def __init__(self, version="9.52"):
->>>>>>> vkapi
         self.version = version
         session = vk.AuthSession(app_id=vkapi.options.ID, user_login=vkapi.options.LOGIN,
                                  user_password=vkapi.options.PASSWORD,
@@ -47,7 +39,7 @@ class VKAPI():
                     if k[i]["text"] != '':
                         a.append({"text":k[i]["text"],"owner_id":owner_id,"post_id":post_id,"number":i})
                     else:
-                        a.append(error())
+                        return error()
                 return a
             except:
                 return error()
