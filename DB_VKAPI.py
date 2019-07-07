@@ -23,9 +23,7 @@ class DataSourceProvider:
         print(data_vk[0])
         self.data_base.add_posts(posts)
 
-    def save_YNews(self):
-        self.data_base.add_news(self.YandexN.get_news(1))
+    def save_YNews(self, request, count):
+        self.data_base.add_news(self.YandexN.get_news_from_search_count(request, count))
 
-
-c = DataSourceProvider()
-c.save_posts("бабка", 200)
+DataSourceProvider().save_YNews("Москва",5)
