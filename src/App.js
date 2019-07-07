@@ -50,7 +50,7 @@ class App extends Component {
     };
 
     publishData(data) {
-
+        console.log(data);
         this.props.dispatch(
             addDataToMap({
                 datasets: {

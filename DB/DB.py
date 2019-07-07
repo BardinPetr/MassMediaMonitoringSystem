@@ -39,8 +39,4 @@ class DB:
         return self.cache_collection.insert_one(res)
 
     def get_cache(self, query):
-        return self.cache_collection.find_one({"query": query})['result']
-
-
-d = DB()
-print(d.get_cache("a"))
+        return self.cache_collection.find_one({"query": query})

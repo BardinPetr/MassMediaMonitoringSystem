@@ -21,7 +21,7 @@ class DataSourceProvider:
         if len(comments) > 0:
             self.data_base.add_comments(comments)
         self.data_base.add_posts(posts)
-        return (posts,comments)
+        return posts, comments
 
     def save_ya_news(self, request, count):
         self.data_base.add_news(self.YandexN.get_news_from_search_count(request, count))
