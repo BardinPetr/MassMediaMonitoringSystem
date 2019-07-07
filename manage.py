@@ -5,7 +5,7 @@ import sys
 DBG = os.environ["NODE_ENV"] == "development"
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "home.settings." + "dev" if DBG else "prod")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "home.settings." + ("dev" if DBG else "prod"))
 
     try:
         from django.core.management import execute_from_command_line
