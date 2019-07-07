@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 
-DBG = os.environ["NODE_ENV"] == "development"
+DBG = os.environ.get("NODE_ENV", "development") == "development"
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "home.settings." + ("dev" if DBG else "prod"))
