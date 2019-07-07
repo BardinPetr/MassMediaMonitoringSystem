@@ -11,13 +11,19 @@ ge = GeoExtractor()
 db = DB()
 
 
-def process_post(x):
-    polarity = sn.get_polarity(x)
-    geo = ge.extract(x)
+def process_post(post):
+    list_of_info = []
+    post = post['text']
+
+    polarity = sn.get_polarity(sn.check_spell(post))
+
+    geo = ge.extract(post)
+    for i in range(len(geo)):
+            list_of_info.append({'latitude':geo[i]['geo'][0], 'longitude':geo[i]['geo'][0], 'value': polarity, 'text':''})
+    return list_of_info
 
 
 def generate_map(query):
-    return query
     cached = db.get_cache(query)
     if cached is None:
         posts = dsp.save_posts(query, 100)
@@ -28,6 +34,7 @@ def generate_map(query):
         m.wait()
 
         return m.get()
+
     else:
         return cached
 
@@ -36,7 +43,7 @@ def generate_map(query):
 #     {
 #         latitude
 #         longitude
-#         comment
+#         text
 #         value
 #     }
 # ]
