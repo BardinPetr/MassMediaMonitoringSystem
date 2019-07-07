@@ -23,5 +23,4 @@ pyaspeller==0.1.0
 vk
 vk_api
 pymongo
-pyaspeller
 pymorphy2
