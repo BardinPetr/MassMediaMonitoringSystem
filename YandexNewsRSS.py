@@ -77,7 +77,6 @@ class YandexNews(object):
         # realise search request
 
         request = urllib.parse.quote(request)
-        print('https://news.yandex.ru/yandsearch?text=' + request + '&rpt=nnews2&grhow=clutop')
 
         news = []
 
@@ -113,7 +112,8 @@ class YandexNews(object):
 
                 try:
                     r = requests.get(
-                    'https://news.yandex.ru/yandsearch?text=' + request + '&rpt=nnews2&grhow=clutop' + '&p=' + str(z))
+                        'https://news.yandex.ru/yandsearch?text=' + request + '&rpt=nnews2&grhow=clutop' + '&p=' + str(
+                            z))
                     soup = BeautifulSoup(r.text, 'html.parser')
                     elems = soup.find_all('li', class_="search-item")
                     z += 1
@@ -124,8 +124,8 @@ class YandexNews(object):
 
         return news
 
-#d = YandexNews()
-#print(d.get_news_from_search_count('москва', 15))
-#1-5
-#5-8
-#15-18
+# d = YandexNews()
+# print(d.get_news_from_search_count('москва', 15))
+# 1-5
+# 5-8
+# 15-18
