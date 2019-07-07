@@ -1,3 +1,4 @@
+from functools import reduce
 from multiprocessing.pool import Pool
 
 from DB.DB import DB
@@ -19,7 +20,8 @@ def process_post(post):
 
     geo = ge.extract(post)
     for i in range(len(geo)):
-            list_of_info.append({'latitude':geo[i]['geo'][0], 'longitude':geo[i]['geo'][0], 'value': polarity, 'text':''})
+        list_of_info.append(
+            {'latitude': geo[i]['geo'][0], 'longitude': geo[i]['geo'][0], 'value': polarity, 'text': ''})
     return list_of_info
 
 
@@ -32,9 +34,7 @@ def generate_map(query):
         pool = Pool(processes=4)
         m = pool.map_async(process_post, posts)
         m.wait()
-
-        return m.get()
-
+        return reduce(lambda x, y: x + y, m.get(), [])
     else:
         return cached
 

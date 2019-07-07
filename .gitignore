@@ -479,3 +479,5 @@ gogogo.py
 
 dist/
 static_dist/
+
+datasources/options.py

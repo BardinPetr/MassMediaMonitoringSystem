@@ -21,7 +21,7 @@ module.exports = {
             ref: 'origin/develop',
             repo: 'git@github.com:BardinPetr/MassMediaMonitoringSystem.git',
             path: '/home/root/deployment',
-            'post-deploy': 'npm i && source venv/bin/activate && venv/bin/pip install -r requirements.txt && npm run-script build && python manage.py collectstatic && pm2 reload ecosystem.config.js --env production'
+            'post-deploy': 'npm i && source venv/bin/activate && venv/bin/pip install -r requirements.txt && npm run-script build && python manage.py collectstatic --noinput && pm2 reload ecosystem.config.js --env production'
         }
     }
 };
