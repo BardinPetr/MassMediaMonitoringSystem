@@ -22,7 +22,7 @@ module.exports = {
             ref: 'origin/develop',
             repo: 'git@github.com:BardinPetr/MassMediaMonitoringSystem.git',
             path: '/home/root/deployment',
-            'post-deploy': 'npm i && python3.6 -m virtualenv -p python3 venv && source venv/bin/activate && venv/bin/pip install -r requirements.txt && pm2 reload ecosystem.config.js --env production'
+            'post-deploy': 'npm i && source venv/bin/activate && venv/bin/pip install -r requirements.txt && pm2 reload ecosystem.config.js --env production'
         }
     }
 };
