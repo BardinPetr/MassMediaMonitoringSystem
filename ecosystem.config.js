@@ -17,7 +17,7 @@ module.exports = {
     }],
     deploy: {
         production: {
-            user: 'root',
+            user: 'bardin.petr',
             host: '188.120.231.51',
             ref: 'origin/develop',
             repo: 'git@github.com:BardinPetr/MassMediaMonitoringSystem.git',
