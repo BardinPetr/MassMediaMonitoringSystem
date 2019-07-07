@@ -18,7 +18,7 @@ urllib3==1.23
 whitenoise==3.3.1
 django-webpack-loader==0.6.0
 pymorphy==0.8
-pyaspeller=0.1.0
+pyaspeller==0.1.0
 -e git+https://github.com/mmkuznecov/polyglot
 vk
 vk_api
