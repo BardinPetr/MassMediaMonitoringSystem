@@ -476,3 +476,5 @@ typings/
 chromedriver.exe
 
 gogogo.py
+
+dist/
