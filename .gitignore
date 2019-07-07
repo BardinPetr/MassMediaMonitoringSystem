@@ -478,3 +478,4 @@ chromedriver.exe
 gogogo.py
 
 dist/
+static_dist/

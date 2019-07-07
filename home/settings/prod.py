@@ -2,7 +2,7 @@
 
 from .base import *
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS += ['http://smartheatmap.ddns.net', 'smartheatmap.ddns.net', '188.120.231.51']
 WSGI_APPLICATION = 'home.wsgi.prod.application'
 
