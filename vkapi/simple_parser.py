@@ -14,7 +14,7 @@ class VKAPI():
     def create_structure(self, wall_item):
         if 'views' not in wall_item.keys():
             wall_item['views'] = {}
-            wall_item['views']['count'] = False
+            wall_item['views']['count'] = 0
         post_news={"id": wall_item['id'], "owner_id": wall_item['owner_id'],
                 "from_id": wall_item['from_id'], "views_count": wall_item['views']['count'],
                 "likes_count": wall_item['likes']['count'], "comments_count": wall_item['comments']['count'],
