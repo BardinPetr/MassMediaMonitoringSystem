@@ -34,3 +34,13 @@ def process_post(x):
             return m.get()
         else:
             return cached
+
+            #
+            # [
+            #     {
+            #         latitude
+            #         longitude
+            #         comment
+            #         value
+            #     }
+            # ]
