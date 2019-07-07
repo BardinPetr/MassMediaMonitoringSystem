@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 
 if __name__ == "__main__":
@@ -13,7 +14,7 @@ if __name__ == "__main__":
             "forget to activate a virtual environment?"
         ) from exc
 
-    # if sys.argv[1] == "runserver":
-    #     print(os.spawnl(os.P_WAIT, "/bin/bash /usr/bin/node /usr/lib/node_modules/npm/bin/npm-cli.js run dev"))
+    if sys.argv[1] == "runserver":
+        subprocess.call(["/usr/bin/npm", "run-script", "dev"])
 
     execute_from_command_line(sys.argv)
