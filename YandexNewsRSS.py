@@ -84,6 +84,8 @@ class YandexNews(object):
             soup = BeautifulSoup(r.text, 'html.parser')
             elems = soup.find_all('li', class_="search-item")
 
+            #print('a')
+
             i = 0
             y = True
             z = 1
@@ -95,8 +97,11 @@ class YandexNews(object):
                 for e in elems:
                     if (i < count):
                         i += 1
-                        un = 'https://news.yandex.by' + e.div.h2.a.get('href')
-                        au.append(un)
+                        if(e.div.h2.a.get('href')[:4]!="http"):
+                            un = 'https://news.yandex.by' + e.div.h2.a.get('href')
+                            au.append(un)
+
+                #print('x')
 
                 for u in au:
                     r = requests.get(u)
@@ -104,6 +109,7 @@ class YandexNews(object):
                     news.append({'head': soup.find('span', class_='story__head-wrap').text,
                                  'text': soup.find('div', class_='doc__text').text,
                                  'date': soup.find('span', class_='story__source-time').text})
+                    #print('c')
 
                 if (i >= count):
                     y = False
@@ -118,13 +124,12 @@ class YandexNews(object):
                     z += 1
                 except:
                     y = False
-        except:
-            pass
-
+        except Exception as e:
+            print(e)
         return news
 
-# d = YandexNews()
-# print(d.get_news_from_search_count('москва', 15))
+#d = YandexNews()
+#print(d.get_news_from_search_count('genby', 50))
 # 1-5
 # 5-8
 # 15-18
