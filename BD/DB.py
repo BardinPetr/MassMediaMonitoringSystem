@@ -9,7 +9,7 @@ class DB:
         self.posts_collection = self.mydb["Posts"]
         self.news_collection = self.mydb["News"]
         self.comments_collection = self.mydb["Comments"]
-        self.cache_collection = self.mydb["cache"]
+        self.cache_collection = self.mydb["Cache"]
 
     def add_posts(self, mylist):
         return self.posts_collection.insert_many(mylist).inserted_ids
@@ -35,8 +35,3 @@ class DB:
 
     def get_cache(self, query):
         return self.cache_collection.find_one({"query": query})
-
-
-c = DB()
-if c.get_cache('query') == None:
-    print(False)
