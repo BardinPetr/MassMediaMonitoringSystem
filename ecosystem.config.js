@@ -17,11 +17,11 @@ module.exports = {
     }],
     deploy: {
         production: {
-            user: 'bardin.petr',
+            user: 'deploy',
             host: '188.120.231.51',
             ref: 'origin/develop',
             repo: 'git@github.com:BardinPetr/MassMediaMonitoringSystem.git',
-            path: '/var/www/production',
+            path: '/home/deploy/production',
             'post-deploy': 'npm i && python3.6 -m virtualenv -p python3 venv && source venv/bin/activate && venv/bin/pip install -r requirements.txt && pm2 reload ecosystem.config.js --env production'
         }
     }
