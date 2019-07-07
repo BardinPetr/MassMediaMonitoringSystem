@@ -1,8 +1,8 @@
+import urllib.parse
 import xml.etree.ElementTree as ET
 
 import requests
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from bs4 import BeautifulSoup
 
 '''
 urlist = {'https://news.yandex.ru/Moscow/index.rss': 'data-counter=".*">(.*?)</title>'}
@@ -34,7 +34,7 @@ class YandexNews(object):
 
     def __init__(self):
         """Constructor"""
-        self.driver = webdriver.Chrome()
+        # self.driver = webdriver.Chrome()
 
     def get_news(self, x):
         """
@@ -73,55 +73,59 @@ class YandexNews(object):
             Bnews += self.get_news(i)
         return Bnews
 
-    def close(self):
-        self.driver.close()
-
     def get_news_from_search_count(self, request, count):
         # realise search request
 
-        self.driver.get('https://news.yandex.ru/')
-        elem = self.driver.find_element_by_name('text')
-        elem.send_keys(request)
-        elem.send_keys(Keys.RETURN)
-
-        b = True
+        request = urllib.parse.quote(request)
 
         news = []
 
-        c = 0
+        try:
+            r = requests.get('https://news.yandex.ru/yandsearch?text=' + request + '&rpt=nnews2&grhow=clutop')
+            soup = BeautifulSoup(r.text, 'html.parser')
+            elems = soup.find_all('li', class_="search-item")
 
-        while b:
-            try:
-                # get news
-                for i in range(1, 13):
+            i = 0
+            y = True
+            z = 1
 
-                    # elem = self.driver.find_element_by_tag_name('ul')
-                    # el = e.find_element_by_tag_name('a')
-                    self.driver.get(self.driver.find_element_by_xpath(
-                        "/html/body/div/div/div/div/ul/li[" + str(i) + "]/div/h2/a").get_attribute('href'))
-                    e1 = self.driver.find_element_by_class_name('story__annot')
-                    news.append({"head": e1.find_element_by_class_name('story__head-wrap').text,
-                                 "text": e1.find_element_by_class_name("doc__text").text,
-                                 "date": e1.find_element_by_class_name("story__source-time").text})
-                    c += 1
-                    if (c >= count):
-                        b = False
-                        break
-                    self.driver.back()
+            while y:
 
-                # next page
-                elemn = self.driver.find_element_by_xpath("/html/body/div/div/div/div/div/div/span[2]/a")
-                nexturl = elemn.get_attribute('href')
-                self.driver.get(nexturl)
-            except Exception as e:
-                # print(e)
-                # print('eror end')
-                b = False
+                au = []
+
+                for e in elems:
+                    if (i < count):
+                        i += 1
+                        un = 'https://news.yandex.by' + e.div.h2.a.get('href')
+                        au.append(un)
+
+                for u in au:
+                    r = requests.get(u)
+                    soup = BeautifulSoup(r.text, 'html.parser')
+                    news.append({'head': soup.find('span', class_='story__head-wrap').text,
+                                 'text': soup.find('div', class_='doc__text').text,
+                                 'date': soup.find('span', class_='story__source-time').text})
+
+                if (i >= count):
+                    y = False
+                    break
+
+                try:
+                    r = requests.get(
+                        'https://news.yandex.ru/yandsearch?text=' + request + '&rpt=nnews2&grhow=clutop' + '&p=' + str(
+                            z))
+                    soup = BeautifulSoup(r.text, 'html.parser')
+                    elems = soup.find_all('li', class_="search-item")
+                    z += 1
+                except:
+                    y = False
+        except:
+            pass
 
         return news
 
 # d = YandexNews()
-# print(d.get_all_news())
-# print(d.get_news(0))
-# print(d.get_news_from_search_count('москва', 5))
-# d.close()
+# print(d.get_news_from_search_count('москва', 15))
+# 1-5
+# 5-8
+# 15-18

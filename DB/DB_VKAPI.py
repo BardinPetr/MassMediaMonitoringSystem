@@ -9,8 +9,8 @@ class DataSourceProvider:
         self.VK = datasources.simple_parser.VKAPI()
         self.data_base = DB()
 
-    def save_posts(self, quest, count):
-        data_vk = self.VK.get_post(quest, count)
+    def save_posts(self, query, count):
+        data_vk = self.VK.get_post(query, count)
         comments = []
         posts = []
         for i in range(count):
@@ -21,7 +21,7 @@ class DataSourceProvider:
         if len(comments) > 0:
             self.data_base.add_comments(comments)
         self.data_base.add_posts(posts)
-        return posts
+        return (posts,comments)
 
     def save_ya_news(self, request, count):
         self.data_base.add_news(self.YandexN.get_news_from_search_count(request, count))

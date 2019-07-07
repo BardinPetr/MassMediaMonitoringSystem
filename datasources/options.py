@@ -1,3 +1,3 @@
 ID = "3116505"
-LOGIN = ""
-PASSWORD = ""
+LOGIN = "+79265397995"
+PASSWORD = "allahakbar2002"

@@ -10,6 +10,11 @@ sn = SentimentAnalysis()
 ge = GeoExtractor()
 db = DB()
 
+posts, comments = dsp.save_posts('поликлиника', 2)
+
+print(posts)
+print(comments)
+
 
 def process_post(x):
     polarity = sn.get_polarity(x)
