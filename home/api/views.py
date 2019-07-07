@@ -8,5 +8,4 @@ from process import generate_map
 @api_view(['GET'])
 @renderer_classes((JSONRenderer,))
 def map_data_endpoint(request, format=None):
-    data = generate_map(request.body)
-    return Response({})
+    return Response(generate_map(request.GET.get('query', '')))
