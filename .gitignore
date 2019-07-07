@@ -476,3 +476,8 @@ typings/
 chromedriver.exe
 
 gogogo.py
+
+dist/
+static_dist/
+
+datasources/options.py

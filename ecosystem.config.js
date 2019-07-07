@@ -3,11 +3,10 @@ module.exports = {
         name: 'MMMDjangoServer',
         interpreter: __dirname + '/venv/bin/python',
         script: __dirname + '/manage.py',
-        args: 'runserver 127.0.0.1:8000',
+        args: 'runserver 0.0.0.0:80',
         instances: 1,
         autorestart: true,
-        watch: true,
-        max_memory_restart: '1.8G',
+        watch: false,
         env: {
             NODE_ENV: 'development'
         },
@@ -17,12 +16,12 @@ module.exports = {
     }],
     deploy: {
         production: {
-            user: 'bardin.petr',
+            user: 'root',
             host: '188.120.231.51',
             ref: 'origin/develop',
             repo: 'git@github.com:BardinPetr/MassMediaMonitoringSystem.git',
-            path: '/var/www/production',
-            'post-deploy': 'npm i && python3.6 -m virtualenv -p python3 venv && source venv/bin/activate && venv/bin/pip install -r requirements.txt && pm2 reload ecosystem.config.js --env production'
+            path: '/home/root/deployment',
+            'post-deploy': 'npm i && source venv/bin/activate && venv/bin/pip install -r requirements.txt && npm run-script build && python manage.py collectstatic --noinput && pm2 reload ecosystem.config.js --env production'
         }
     }
 };

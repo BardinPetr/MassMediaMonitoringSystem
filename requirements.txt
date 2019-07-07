@@ -24,3 +24,10 @@ vk
 vk_api
 pymongo
 pymorphy2
+bs4
+google-api-core==1.13.0
+google-auth==1.6.3
+google-cloud-language==1.2.0
+googleapis-common-protos==1.6.0
+grpcio
+yandex_geocoder

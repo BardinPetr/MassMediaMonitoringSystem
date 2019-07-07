@@ -1,11 +1,16 @@
+import urllib
+
 import pymongo
 
 
 class DB:
     def __init__(self):
         """ initialization """
-        self.myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-        self.mydb = self.myclient["mydatabase"]
+        self.myclient = pymongo.MongoClient(
+            'mongodb://%s:%s@188.120.231.51' % (urllib.parse.quote_plus('app'),
+                                                urllib.parse.quote_plus(
+                                                    'FJWE*uTej58E&')))
+        self.mydb = self.myclient["MMM"]
         self.posts_collection = self.mydb["Posts"]
         self.news_collection = self.mydb["News"]
         self.comments_collection = self.mydb["Comments"]
@@ -34,4 +39,8 @@ class DB:
         return self.cache_collection.insert_one(res)
 
     def get_cache(self, query):
-        return self.cache_collection.find_one({"query": query})
+        return self.cache_collection.find_one({"query": query})['result']
+
+
+d = DB()
+print(d.get_cache("a"))

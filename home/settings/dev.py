@@ -17,3 +17,6 @@ DATABASES = {
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
 )
+
+# STATIC_URL = '/dist/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'dist')]
