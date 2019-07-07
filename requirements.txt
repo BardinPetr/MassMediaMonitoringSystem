@@ -20,3 +20,5 @@ django-webpack-loader==0.6.0
 vk
 vk_api
 pymongo
+pyaspeller
+pymorphy2
