@@ -14,33 +14,29 @@ db = DB()
 def process_post(x):
     polarity = sn.get_polarity(x)
     geo = ge.extract(x)
-    return {
-               "latitude":,
-           "longitude":,
-    "comment":,
-    "value": polarity
-    }
 
-    def generate_map(query):
-        cached = db.get_cache(query)
-        if cached is None:
-            posts = dsp.save_posts(query, 100)
-            # news = dsp.save_ya_news(query, 20)
 
-            pool = Pool(processes=4)
-            m = pool.map_async(process_post, posts)
-            m.wait()
+def generate_map(query):
+    return query
+    cached = db.get_cache(query)
+    if cached is None:
+        posts = dsp.save_posts(query, 100)
+        # news = dsp.save_ya_news(query, 20)
 
-            return m.get()
-        else:
-            return cached
+        pool = Pool(processes=4)
+        m = pool.map_async(process_post, posts)
+        m.wait()
 
-            #
-            # [
-            #     {
-            #         latitude
-            #         longitude
-            #         comment
-            #         value
-            #     }
-            # ]
+        return m.get()
+    else:
+        return cached
+
+#
+# [
+#     {
+#         latitude
+#         longitude
+#         comment
+#         value
+#     }
+# ]
