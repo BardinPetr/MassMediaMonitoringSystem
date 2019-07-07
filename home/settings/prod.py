@@ -3,19 +3,8 @@
 from .base import *
 
 DEBUG = False
-ALLOWED_HOSTS += ['http://domain.com']
+ALLOWED_HOSTS += ['http://smartheatmap.ddns.net']
 WSGI_APPLICATION = 'home.wsgi.prod.application'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'db_name',
-        'USER': 'db_user',
-        'PASSWORD': 'db_password',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

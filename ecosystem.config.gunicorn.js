@@ -1,9 +1,7 @@
 module.exports = {
     apps: [{
         name: 'MMMDjangoServer',
-        interpreter: __dirname + '/venv/bin/python',
-        script: __dirname + '/manage.py',
-        args: 'runserver 0.0.0.0:80',
+        script: 'gunicorn home.wsgi.prod',
         instances: 1,
         autorestart: true,
         watch: false,

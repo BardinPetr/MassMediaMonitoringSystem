@@ -15,6 +15,6 @@ if __name__ == "__main__":
         ) from exc
 
     if sys.argv[1] == "runserver":
-        subprocess.call(["/usr/bin/npm", "run-script", "dev"])
+        subprocess.call(["/usr/bin/npm", "run-script", "dev" if os.environ["NODE_ENV"] == "development" else "build"])
 
     execute_from_command_line(sys.argv)
