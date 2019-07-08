@@ -1,3 +1,3 @@
 ID = "3116505"
 LOGIN = "89586204199"
-PASSWORD = "2Funnyski2"
+PASSWORD = "Qwerty234"
