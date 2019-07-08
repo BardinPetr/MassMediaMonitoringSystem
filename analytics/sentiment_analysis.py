@@ -30,4 +30,4 @@ class SentimentAnalysis:
         try:
             return T(norm_list).polarity
         except:
-            return 'Neutral'
+            return 0
