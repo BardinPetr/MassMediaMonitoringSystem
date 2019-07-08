@@ -6,7 +6,7 @@ morph = pymorphy2.MorphAnalyzer()
 speller = YandexSpeller()
 
 
-class SentimentAnalysis:
+class SentimentAnalyser:
 
     @staticmethod
     def check_spell(text):

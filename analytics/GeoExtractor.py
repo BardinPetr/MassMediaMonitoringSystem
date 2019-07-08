@@ -22,9 +22,7 @@ class GeoExtractor:
         entities = self.client.analyze_entities(document=document).entities
         for entity in entities:
             entity_type = enums.Entity.Type(entity.type)
-            # print(entity.name, entity_type.name)
             try:
-                # assert entity_type.name in ['ADDRESS', 'LOCATION', 'OTHER']
                 geo = Client.coordinates(entity.name)
             except Exception:
                 continue
