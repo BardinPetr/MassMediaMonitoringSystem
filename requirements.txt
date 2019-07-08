@@ -1,3 +1,4 @@
+  
 certifi==2018.8.24
 chardet==3.0.4
 defusedxml==0.5.0
@@ -17,11 +18,16 @@ six==1.11.0
 urllib3==1.23
 whitenoise==3.3.1
 django-webpack-loader==0.6.0
-pymorphy=0.8
-pyaspeller=0.1.0
--e git+https://github.com/mmkuznecov/polyglot
+pyaspeller==0.1.0
+-e git+https://github.com/mmkuznecov/polyglot#egg=polyglot
 vk
 vk_api
 pymongo
-pyaspeller
 pymorphy2
+bs4
+google-api-core==1.13.0
+google-auth==1.6.3
+google-cloud-language==1.2.0
+googleapis-common-protos==1.6.0
+grpcio
+yandex_geocoder

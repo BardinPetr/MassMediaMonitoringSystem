@@ -1,3 +1,4 @@
+from functools import reduce
 from multiprocessing.pool import Pool
 
 from DB.DB import DB
@@ -10,19 +11,21 @@ sn = SentimentAnalysis()
 ge = GeoExtractor()
 db = DB()
 
-posts, comments = dsp.save_posts('поликлиника', 2)
 
-print(posts)
-print(comments)
+def process_post(post):
+    list_of_info = []
+    post = post['text']
 
+    polarity = sn.get_polarity(sn.check_spell(post))
 
-def process_post(x):
-    polarity = sn.get_polarity(x)
-    geo = ge.extract(x)
+    geo = ge.extract(post)
+    for i in range(len(geo)):
+        list_of_info.append(
+            {'latitude': geo[i]['geo'][0], 'longitude': geo[i]['geo'][0], 'value': polarity, 'text': ''})
+    return list_of_info
 
 
 def generate_map(query):
-    return query
     cached = db.get_cache(query)
     if cached is None:
         posts = dsp.save_posts(query, 100)
@@ -31,8 +34,7 @@ def generate_map(query):
         pool = Pool(processes=4)
         m = pool.map_async(process_post, posts)
         m.wait()
-
-        return m.get()
+        return reduce(lambda x, y: x + y, m.get(), [])
     else:
         return cached
 
@@ -41,7 +43,7 @@ def generate_map(query):
 #     {
 #         latitude
 #         longitude
-#         comment
+#         text
 #         value
 #     }
 # ]
