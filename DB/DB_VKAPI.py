@@ -1,5 +1,5 @@
 import datasources.simple_parser
-from DB.DB import DB
+from DB import DB
 from datasources import YandexNewsRSS
 
 
@@ -14,7 +14,7 @@ class DataSourceProvider:
         comments = []
         posts = []
         for i in range(count):
-            if data_vk[i][0][0]['text'] != "":
+            if data_vk[i][0]['text'] != "":
                 posts.append(data_vk[i][0])
             for j in range(len(data_vk[i][1])):
                 if data_vk[i][1][j]['text'] != '0':
