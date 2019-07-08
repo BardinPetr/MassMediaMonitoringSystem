@@ -14,15 +14,20 @@ class DataSourceProvider:
         comments = []
         posts = []
         for i in range(count):
-            posts.append(data_vk[i][0])
+            if data_vk[i][0][0]['text'] != "":
+                posts.append(data_vk[i][0])
             for j in range(len(data_vk[i][1])):
                 if data_vk[i][1][j]['text'] != '0':
                     comments.append(data_vk[i][1][j])
         if len(comments) > 0:
             self.data_base.add_comments(comments)
         self.data_base.add_posts(posts)
-        return (posts,comments)
+        return (posts, comments)
 
     def save_ya_news(self, request, count):
         self.data_base.add_news(self.YandexN.get_news_from_search_count(request, count))
         return self.data_base.get_news()
+
+
+c = DataSourceProvider()
+c.save_posts("поликлиника", 200)
