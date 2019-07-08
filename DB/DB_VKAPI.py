@@ -30,4 +30,4 @@ class DataSourceProvider:
 
 
 c = DataSourceProvider()
-c.save_posts("поликлиника", 200)
+print(c.save_posts("поликлиника", 200))
