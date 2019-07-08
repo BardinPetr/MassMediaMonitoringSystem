@@ -6,11 +6,14 @@ import pymongo
 class DB:
     def __init__(self):
         """ initialization """
+        """     
         self.myclient = pymongo.MongoClient(
             'mongodb://%s:%s@188.120.231.51' % (urllib.parse.quote_plus('app'),
                                                 urllib.parse.quote_plus(
                                                     'FJWE*uTej58E&')))
-        self.mydb = self.myclient["MMM"]
+"""
+        self.myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        self.mydb = self.myclient["mydatadase"]
         self.posts_collection = self.mydb["Posts"]
         self.news_collection = self.mydb["News"]
         self.comments_collection = self.mydb["Comments"]
