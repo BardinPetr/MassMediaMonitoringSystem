@@ -8,16 +8,16 @@ module.exports = {
           "id": "6vcue0g",
           "type": "cluster",
           "config": {
-            "dataId": "my_data",
-            "label": "Hello",
+            "dataId": "mmm_data",
+            "label": "Comment",
             "color": [
               18,
               147,
               154
             ],
             "columns": {
-              "lat": "dropoff_latitude",
-              "lng": "dropoff_longitude"
+              "lat": "latitude",
+              "lng": "longitude"
             },
             "isVisible": true,
             "visConfig": {
@@ -28,13 +28,13 @@ module.exports = {
                 "type": "sequential",
                 "category": "Uber",
                 "colors": [
-                  "#FF0000",
-                  "#FF7400",
-                  "#FF9600",
                   "#FFC300",
-                  "#94C300",
-                  "#35C300",
+                  "#FF0000",
                   "#00FF00"
+                  // "#35C300",
+                  // "#94C300",
+                  // "#FF9600",
+                  // "#FF7400",
                 ]
               },
               "radiusRange": [
@@ -61,7 +61,7 @@ module.exports = {
           },
           "visualChannels": {
             "colorField": {
-              "name": "trip_distance",
+              "name": "value",
               "type": "real"
             },
             "colorScale": "quantile"
@@ -71,12 +71,11 @@ module.exports = {
       "interactionConfig": {
         "tooltip": {
           "fieldsToShow": {
-            "my_data": [
-              "VendorID",
-              "tpep_pickup_datetime",
-              "tpep_dropoff_datetime",
-              "passenger_count",
-              "trip_distance"
+            "mmm_data": [
+              "latitude",
+              "longitude",
+              "value",
+              "comment"
             ]
           },
           "enabled": true

@@ -21,22 +21,26 @@ def process_post(post):
     geo = ge.extract(post)
     for i in range(len(geo)):
         list_of_info.append(
-            {'latitude': geo[i]['geo'][0], 'longitude': geo[i]['geo'][0], 'value': polarity, 'text': ''})
+            [geo[i]['geo'][1], geo[i]['geo'][0], polarity, ''])
     return list_of_info
 
 
 def generate_map(query):
     cached = db.get_cache(query)
     if cached is None:
-        posts = dsp.save_posts(query, 100)
+        posts, comments = dsp.save_posts(query, 8)
         # news = dsp.save_ya_news(query, 20)
 
-        pool = Pool(processes=4)
-        m = pool.map_async(process_post, posts)
-        m.wait()
-        return reduce(lambda x, y: x + y, m.get(), [])
+        pool = Pool(processes=8)
+        try:
+            res = pool.map(process_post, posts)
+            cashed = reduce(lambda x, y: x + y, res, [])
+            db.add_cache(query, cached)
+            return cached
+        except IndexError:
+            return []
     else:
-        return cached
+        return cached['result']
 
 #
 # [
