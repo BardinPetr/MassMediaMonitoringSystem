@@ -35,3 +35,6 @@ class DB:
 
     def get_cache(self, query):
         return self.cache_collection.find_one({"query": query})
+
+    def get_posts_by_query(self, query):
+        return list(self.posts_collection.find_all({"query": query}))
