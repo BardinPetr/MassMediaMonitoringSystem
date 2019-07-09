@@ -1,14 +1,14 @@
 import vk
 
-import datasources.options
+from datasources.options import ID, LOGIN, PASSWORD
 
 
 class VKAPI:
     def __init__(self, version="9.52"):
         self.version = version
-        session = vk.AuthSession(app_id=datasources.options.ID,
-                                 user_login=datasources.options.LOGIN,
-                                 user_password=datasources.options.PASSWORD,
+        session = vk.AuthSession(app_id=ID,
+                                 user_login=LOGIN,
+                                 user_password=PASSWORD,
                                  scope='wall, fields, messages')
         self.vkapi = vk.API(session)
 
