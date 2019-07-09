@@ -6,17 +6,22 @@ morph = pymorphy2.MorphAnalyzer()
 speller = YandexSpeller()
 
 
-class SentimentAnalysis:
+class SentimentAnalyser:
 
     @staticmethod
     def check_spell(text):
-        changes = {change['word']: change['s'][0] for change in speller.spell(text)}
-        for word, suggestion in changes.items():
-            text = text.replace(word, suggestion)
+        try:
+            changes = {change['word']: change['s'][0] for change in speller.spell(text)}
+            for word, suggestion in changes.items():
+                text = text.replace(word, suggestion)
+        except Exception:
+            pass
         return text
 
     @staticmethod
     def get_polarity(text):
+        if text == "":
+            return ""
         text = T(text)
         word_list = text.words
         norm_list = ''
