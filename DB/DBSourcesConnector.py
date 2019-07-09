@@ -7,10 +7,10 @@ class DBSourcesConnector:
     def __init__(self):
         self.YandexN = YandexNews()
         self.data_base = DB()
-        self.VK = VKAPI()
+        # self.VK = VKAPI()
 
     def save_posts(self, query, count=10):
-        self.data_base.add_posts(self.VK.get_post(query, count))
+        # self.data_base.add_posts(self.VK.get_post(query, count))
         return 0
 
     def save_ya_news(self, query, count=10):
