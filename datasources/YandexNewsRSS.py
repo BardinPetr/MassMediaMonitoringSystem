@@ -102,7 +102,8 @@ class YandexNews(object):
                 for u in au:
                     r = requests.get(u)
                     soup = BeautifulSoup(r.text, 'html.parser')
-                    news.append({'head': soup.find('span', class_='story__head-wrap').text,
+                    news.append({'request':request,
+                                 'head': soup.find('span', class_='story__head-wrap').text,
                                  'text': soup.find('div', class_='doc__text').text,
                                  'date': soup.find('span', class_='story__source-time').text})
 
