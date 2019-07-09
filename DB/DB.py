@@ -39,5 +39,11 @@ class DB:
         res = {"query": query, "result": data}
         return self.cache_collection.insert_one(res)
 
+    def get_ya_news_by_cache(self,query):
+        return self.news_collection.find_one({"query": query})
+
+    def get_vk_posts_by_cache(self,query):
+        return self.posts_collection.find_one({"query": query})
+
     def get_cache(self, query):
         return self.cache_collection.find_one({"query": query})
