@@ -19,12 +19,12 @@ def process_post(post):
 
     polarity = sn.get_polarity(text)
     return list(map(lambda x:
-                    {
-                        "latitude": x['geo'][1],
-                        "longitude": x['geo'][0],
-                        "value": polarity,
-                        "comment": text
-                    },
+                    [
+                        x['geo'][1],
+                        x['geo'][0],
+                        polarity,
+                        text
+                    ],
                     ge.extract(text)))
 
 
