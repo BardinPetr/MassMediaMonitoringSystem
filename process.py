@@ -14,7 +14,7 @@ db = DB()
 
 
 def process_post(post):
-    text = sn.check_spell(post['text'])
+    text = post['text']  # sn.check_spell(post['text'])
     print("Processing post: ", text[:20])
 
     polarity = sn.get_polarity(text)
@@ -31,9 +31,9 @@ def process_post(post):
 def generate_map(query):
     cached = db.get_cache(query)
     if cached is None:
-        dsp.save_posts(query, 24)
+        dsp.save_posts(query, 100)
         pool = MyPool(processes=multiprocessing.cpu_count())
-        res = pool.map(process_post, db.get_posts(query)[:200])
+        res = pool.map(process_post, db.get_posts(query)[:40])
         res = reduce(lambda x, y: x + y, res, [])
         db.add_cache(query, res)
         return res

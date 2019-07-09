@@ -14,7 +14,7 @@ class SentimentAnalyser:
             changes = {change['word']: change['s'][0] for change in speller.spell(text)}
             for word, suggestion in changes.items():
                 text = text.replace(word, suggestion)
-        except IndexError:
+        except Exception:
             pass
         return text
 
