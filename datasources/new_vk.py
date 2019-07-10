@@ -10,7 +10,7 @@ class GetPosts:
         for i in range(5):
             feed = vkapi.newsfeed.search(q=query, count=150, filters='post', v=5.12, offset=i*200)
             for news in feed['items']:
-                newsfeed.append({'text':news['text'], 'date':news['date']})
+                newsfeed.append({'text':news['text'], 'date':news['date'],'query':query})
         
         epoch = newsfeed[0]['date']-newsfeed[-1]['date']
 
