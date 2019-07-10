@@ -12,7 +12,7 @@ class DB:
         # self.myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 
         self.mydb = self.myclient["MMM"]
-        self.posts_collection = self.mydb["Posts"]
+        self.posts_collection = self.mydb["Vk_posts"]
         self.news_collection = self.mydb["News"]
         self.comments_collection = self.mydb["Comments"]
         self.cache_collection = self.mydb["Cache"]
