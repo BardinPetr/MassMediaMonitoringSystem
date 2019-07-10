@@ -1,4 +1,5 @@
 import urllib
+from pprint import pprint
 
 import pymongo
 
@@ -22,6 +23,15 @@ class DB:
 
     def get_posts(self, query=None):
         return list(self.posts_collection.find({} if query is None else {"query": query}))
+
+    def get_posts_by_date(self, query, start, end):
+        return list(self
+                    .posts_collection
+                    .find({"$and": [{"query": query},
+                                    {"date": {"$lte": end}},
+                                    {"date": {"$gte": start}}
+                                    ]})
+                    .sort("date"))
 
     def add_news(self, mylist):
         return self.news_collection.insert_many(mylist).inserted_ids
@@ -47,3 +57,4 @@ class DB:
 
     def get_cache(self, query):
         return self.cache_collection.find_one({"query": query})
+
