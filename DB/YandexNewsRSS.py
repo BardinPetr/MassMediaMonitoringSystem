@@ -3,7 +3,7 @@ import urllib.parse
 import requests
 from bs4 import BeautifulSoup
 
-from DB.DB import DB
+from DB import DB
 
 
 class YandexNews(object):
@@ -11,12 +11,10 @@ class YandexNews(object):
         call GetNews to get data
     """
 
-    def __init__(self):
-        """Constructor"""
-        self.d = DB()
         # self.driver = webdriver.Chrome()
 
     def upload_news_from_search_count(self, request, count):
+        d = DB.DB()
         # realise search request
 
         request = urllib.parse.quote(request)
@@ -32,10 +30,11 @@ class YandexNews(object):
             y = True
             z = 1
 
-            news = []
+            
 
             while y:
 
+                #news = []
                 au = []
 
                 for e in elems:
@@ -45,11 +44,16 @@ class YandexNews(object):
                         au.append(un)
 
                 for u in au:
-                    r = requests.get(u)
-                    soup = BeautifulSoup(r.text, 'html.parser')
-                    news.append({'head': soup.find('span', class_='story__head-wrap').text,
-                                 'text': soup.find('div', class_='doc__text').text,
-                                 'date': soup.find('span', class_='story__source-time').text})
+                    try:
+                        r = requests.get(u)
+                        soup = BeautifulSoup(r.text, 'html.parser')
+                        news.append({'head': soup.find('span', class_='story__head-wrap').text,
+                                     'text': soup.find('div', class_='doc__text').text,
+                                     'date': soup.find('span', class_='story__source-time').text,
+                                     'url': u})
+                    except Exception as e:
+                        print(e)
+                        print(u)
 
                 if (i >= count):
                     y = False
@@ -62,20 +66,17 @@ class YandexNews(object):
                     soup = BeautifulSoup(r.text, 'html.parser')
                     elems = soup.find_all('li', class_="search-item")
                     z += 1
-                    self.d.add_news(news)
-                    print('complete' + z)
-                except Exception as e:
+                    #print(news)
+                    
+                    print('complete ' + str(z))
+                except IOError as e:
                     print(e)
                     y = False
-        except Exception as ee:
+        except IOError as ee:
             print(ee)
 
-        return news
+        d.add_news(news)
 
-
-if (__name__ == '__main__'):
-    d = YandexNews()
-    d.upload_news_from_search_count('Сочи', 1000)
 
 # d = YandexNews()
 # print(d.get_news_from_search_count('москва', 15))
