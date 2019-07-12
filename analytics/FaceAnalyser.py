@@ -1,6 +1,4 @@
-import json
 from math import inf
-from os import path, getcwd
 
 import requests
 

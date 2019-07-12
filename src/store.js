@@ -1,4 +1,4 @@
-import {createStore, applyMiddleware, compose} from 'redux';
+import {applyMiddleware, compose, createStore} from 'redux';
 
 import window from 'global/window';
 import {taskMiddleware} from 'react-palm/tasks';

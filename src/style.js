@@ -1134,4 +1134,4 @@ export const MAP_STYLE = {
     "owner": "goldfor1",
     "visibility": "private",
     "draft": false
-}
+};

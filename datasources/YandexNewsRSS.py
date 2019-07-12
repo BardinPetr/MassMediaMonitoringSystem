@@ -11,7 +11,7 @@ class YandexNews(object):
         call GetNews to get data
     """
 
-        # self.driver = webdriver.Chrome()
+    # self.driver = webdriver.Chrome()
 
     def upload_news_from_search_count(self, request, count):
         d = DB.DB()
@@ -30,11 +30,9 @@ class YandexNews(object):
             y = True
             z = 1
 
-            
-
             while y:
 
-                #news = []
+                # news = []
                 au = []
 
                 for e in elems:
@@ -66,8 +64,8 @@ class YandexNews(object):
                     soup = BeautifulSoup(r.text, 'html.parser')
                     elems = soup.find_all('li', class_="search-item")
                     z += 1
-                    #print(news)
-                    
+                    # print(news)
+
                     print('complete ' + str(z))
                 except IOError as e:
                     print(e)
@@ -76,7 +74,6 @@ class YandexNews(object):
             print(ee)
 
         d.add_news(news)
-
 
 # d = YandexNews()
 # print(d.get_news_from_search_count('москва', 15))
