@@ -40,3 +40,5 @@ class FaceAnalyser:
             }
         except IndexError:
             return {"sex": -1, "age": -1}
+        except KeyError:
+            return {"sex": -1, "age": -1}
