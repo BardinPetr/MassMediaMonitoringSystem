@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
+from DB.DB import DB
 from process import generate_map
 
 
@@ -17,3 +18,12 @@ def map_data_endpoint(request, format=None):
         ],
         "rows": generate_map(request.GET.get('query', ''))
     })
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer,))
+def clusters_endpoint(request, format=None):
+    q = request.GET
+    if ('start' not in q.keys()) or ('end' not in q.keys()):
+        return Response(status=400)
+    return Response(DB().aggregate_posts(int(q['start']), int(q['end'])))
