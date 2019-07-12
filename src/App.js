@@ -6,6 +6,7 @@ import MapGL from 'react-map-gl';
 import Line from './data/Line';
 import 'antd/dist/antd.css';
 import axios from 'axios';
+import {DatePickerBar} from "./components/DatePickerBar";
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiZ29sZGZvcjEiLCJhIjoiY2p4c3BzeThxMGpzejNtbzF5YmgxM2ttOSJ9.f2knfkaI5bt5avgiS5qDlw'; // eslint-disable-line
 
@@ -79,10 +80,14 @@ export default class App extends Component {
     mapValue = (x, in_min, in_max, out_min, out_max) => (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 
     handleMapLoaded = () => {
+        this.refreshData([0, 10000000000])
+    };
+
+    refreshData = (dates) => {
         axios.get('/api/clusters', {
                 params: {
-                    start: 0,
-                    end: 10000000000
+                    start: dates[0],
+                    end: dates[1]
                 }
             }
         ).then((response) => {
@@ -120,6 +125,7 @@ export default class App extends Component {
                             onLoad={this.handleMapLoaded}
                         />)}
                 </AutoSizer>
+                <DatePickerBar onSearch={(x) => this.refreshData(x)}/>
             </div>
         );
     }
