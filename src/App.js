@@ -152,10 +152,10 @@ export default class App extends Component {
         ).then((response) => {
             // handle reaponse
             var array = [];
-            console.log('Data response: ', response);
-            for (var item in Polygon) {
-                for (var i in response) {
-                    if (i._id == item.features.properties.name) {
+            console.log('Data response: ', response).data;
+            for(var item in Polygon){
+                for(var i in response.data){
+                    if(i._id == item.features.properties.name){
                         array.push(i.count);
                     }
                 }
@@ -211,17 +211,20 @@ export default class App extends Component {
     render() {
         const {viewport} = this.state;
         return (
-            <div>
+            <div style={{position: 'absolute', width: '100%', height: '100%', minHeight: '70vh'}}>
+                <AutoSizer>
+                {({height, width}) => (
                 <MapGL
                     ref={this._mapRef}
                     {...this.state.viewport}
-                    width={1920}
-                    height={1080}
+                    width={width}
+                    height={height}
                     mapStyle={'mapbox://styles/mapbox/light-v10'}
                     onViewportChange={this._onViewportChange}
                     mapboxApiAccessToken={MAPBOX_TOKEN}
                     onLoad={this._handleMapLoaded}
-                />
+                />)}
+                </AutoSizer>
             </div>
         );
     }
