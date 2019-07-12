@@ -13,7 +13,7 @@ class GetPosts:
                 print('Using next key')
 
 
-    def get_thousend_posts(self,query):
+    def get_thousand_posts(self,query):
         newsfeed = []
         print('Start parsing')
         for i in range(5):
