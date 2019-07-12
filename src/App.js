@@ -4,6 +4,7 @@ import {colors} from './SetupColor'
 import Polygon from './data/Polygon'
 import Line from './data/Line'
 import "antd/dist/antd.css";
+import AutoSizer from "react-virtualized/dist/es/AutoSizer";
 
 const axios = require('axios');
 var colorsys = require('colorsys');
@@ -150,26 +151,24 @@ export default class App extends Component {
                 }
             }
         ).then((response) => {
-            // handle reaponse
-            var array = [];
-            console.log('Data response: ', response).data;
-            for(var item in Polygon){
-                for(var i in response.data){
-                    if(i._id == item.features.properties.name){
+            // handle response
+            let array = [];
+            console.log('Data response: ', response.data);
+            console.log(Polygon);
+            Polygon.forEach((item) => {
+                response.data.forEach((i) => {
+                    if (i._id === item.features[0].properties.name) {
                         array.push(i.count);
                     }
-                }
-            }
-
+                });
+            });
             this._getColor(array);
-
         }).catch((error) => {
             // handle error
             console.log('Data response error: ', error);
-
         });
     };
-
+    
     _mkFeatureCollection = (features) => {
         {
             'FeatureCollection', features
@@ -209,21 +208,20 @@ export default class App extends Component {
 
 
     render() {
-        const {viewport} = this.state;
         return (
             <div style={{position: 'absolute', width: '100%', height: '100%', minHeight: '70vh'}}>
                 <AutoSizer>
-                {({height, width}) => (
-                <MapGL
-                    ref={this._mapRef}
-                    {...this.state.viewport}
-                    width={width}
-                    height={height}
-                    mapStyle={'mapbox://styles/mapbox/light-v10'}
-                    onViewportChange={this._onViewportChange}
-                    mapboxApiAccessToken={MAPBOX_TOKEN}
-                    onLoad={this._handleMapLoaded}
-                />)}
+                    {({height, width}) => (
+                        <MapGL
+                            ref={this._mapRef}
+                            {...this.state.viewport}
+                            width={width}
+                            height={height}
+                            mapStyle={'mapbox://styles/mapbox/light-v10'}
+                            onViewportChange={this._onViewportChange}
+                            mapboxApiAccessToken={MAPBOX_TOKEN}
+                            onLoad={this._handleMapLoaded}
+                        />)}
                 </AutoSizer>
             </div>
         );

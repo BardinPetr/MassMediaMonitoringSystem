@@ -1,15 +1,15 @@
 module.exports = [
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "роза-хутор"
+                type: "Feature",
+                properties: {
+                    name: "роза-хутор"
                 },
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
                         [
                             [40.1633916, 43.6535743],
                             [40.1832787, 43.6610326],
@@ -56,16 +56,16 @@ module.exports = [
         ]
     },
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "сочи"
+                type: "Feature",
+                properties: {
+                    name: "сочи"
                 },
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
                         [
                             [39.713687896728516, 43.5833752499621],
                             [39.71729278564453, 43.581696546341256],
@@ -100,16 +100,16 @@ module.exports = [
         ]
     },
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "адлер"
+                type: "Feature",
+                properties: {
+                    name: "адлер"
                 },
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
                         [
                             [39.88775253295898, 43.48674262433419],
                             [39.89358901977539, 43.46955281717473],
@@ -148,16 +148,16 @@ module.exports = [
         ]
     },
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "хоста"
+                type: "Feature",
+                properties: {
+                    name: "хоста"
                 },
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
                         [
                             [39.86123085021973, 43.51258041196146],
                             [39.8832893371582, 43.494214928181464],
@@ -187,16 +187,16 @@ module.exports = [
         ]
     },
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "лазаревское"
+                type: "Feature",
+                properties: {
+                    name: "лазаревское"
                 },
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
                         [
                             [39.25895690917969, 43.959707857172845],
                             [39.27131652832031, 43.95328204198018],

@@ -1,15 +1,15 @@
 module.exports = [
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "роза-хутор"
+                type: "Feature",
+                properties: {
+                    name: "роза-хутор"
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
+                geometry: {
+                    type: "LineString",
+                    coordinates: [
                         [40.1633916, 43.6535743],
                         [40.1832787, 43.6610326],
                         [40.1871724, 43.6624927],
@@ -54,16 +54,16 @@ module.exports = [
         ]
     },
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "сочи"
+                type: "Feature",
+                properties: {
+                    name: "сочи"
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
+                geometry: {
+                    type: "LineString",
+                    coordinates: [
                         [39.713687896728516, 43.5833752499621],
                         [39.71729278564453, 43.581696546341256],
                         [39.7184944152832, 43.58039085560784],
@@ -96,16 +96,16 @@ module.exports = [
         ]
     },
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "адлер"
+                type: "Feature",
+                properties: {
+                    name: "адлер"
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
+                geometry: {
+                    type: "LineString",
+                    coordinates: [
                         [39.88775253295898, 43.48674262433419],
                         [39.89358901977539, 43.46955281717473],
                         [39.899940490722656, 43.45111193718594],
@@ -142,16 +142,16 @@ module.exports = [
         ]
     },
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "хоста"
+                type: "Feature",
+                properties: {
+                    name: "хоста"
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
+                geometry: {
+                    type: "LineString",
+                    coordinates: [
                         [39.86123085021973, 43.51258041196146],
                         [39.8832893371582, 43.494214928181464],
                         [39.88938331604004, 43.49620738640781],
@@ -179,16 +179,16 @@ module.exports = [
         ]
     },
     {
-        "type": "FeatureCollection",
-        "features": [
+        type: "FeatureCollection",
+        features: [
             {
-                "type": "Feature",
-                "properties": {
-                    "name": "лазаревское"
+                type: "Feature",
+                properties: {
+                    name: "лазаревское"
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
+                geometry: {
+                    type: "LineString",
+                    coordinates: [
                         [39.25895690917969, 43.959707857172845],
                         [39.27131652832031, 43.95328204198018],
                         [39.281959533691406, 43.95229339335166],
