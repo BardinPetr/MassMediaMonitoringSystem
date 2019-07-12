@@ -14,11 +14,7 @@ class FaceAnalyser:
     }
     headers = {
         'Ocp-Apim-Subscription-Key':
-            json.load(
-                open(path.join(
-                    getcwd().replace('analytics', ''),
-                    'credentials.json'))
-            )["microsoft_api_key"]
+            ["microsoft_api_key"]
     }
 
     @staticmethod
