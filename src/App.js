@@ -62,7 +62,7 @@ export default class App extends Component {
     getMap = () => this._mapRef.current ? this._mapRef.current.getMap() : null;
 
     getColor = (data) => {
-        const map = this._getMap();
+        const map = this.getMap();
         const MAX = Math.max.apply(null, data);
         let data1 = []
         data.forEach((item) => {if(item != -1) data1.push(item);});
@@ -70,14 +70,14 @@ export default class App extends Component {
         var i;
         console.log(Polygon.length);
         for (i = 0; i < Polygon.length; i++) {
-            if(data[i] != 1){
-                var color = colorsys.hsvToHex({h: this._map(data[i], MIN, MAX, -120, 0), s: 100, v: 100});
+            if(data[i] != -1){
+                var color = hsvToHex({h: this.mapValue(data[i], MIN, MAX, -120, 0), s: 100, v: 100});
                 console.log(color);
                 var str = i.toString();
                 map.addSource(("Polygon" + str), {type: 'geojson', data: Polygon[i]});
-                map.addLayer(this._mkPolygonLayer(("Polygon" + str), ("Polygon" + str), color));
+                map.addLayer(this.makePolygonLayer(("Polygon" + str), ("Polygon" + str), color));
                 map.addSource(("Line" + str), {type: 'geojson', data: Line[i]});
-                map.addLayer(this._mkLineLayer(("Line" + str), ("Line" + str), color));
+                map.addLayer(this.makeLineLayer(("Line" + str), ("Line" + str), color));
             }
         }
     };
