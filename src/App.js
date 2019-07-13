@@ -81,7 +81,7 @@ export default class App extends Component {
 
     getColor = (data) => {
         const map = this.getMap();
-        const MIN = Math.min.apply(null, data.map((x) => x.display_count));
+        const MIN = Math.min.apply(null, data.filter((x) => x !== -1).map((x) => x.display_count));
         const MAX = Math.max.apply(null, data.map((x) => x.display_count));
 
         this.state.mapSources.forEach((e) => {
@@ -98,8 +98,9 @@ export default class App extends Component {
 
 
         for (let i = 0; i < data.length; i++) {
+            if (data[i] === -1) continue;
+
             const color = hsvToHex({h: this.mapValue(data[i].display_count, MIN, MAX, -120, 0), s: 100, v: 100});
-            console.log(color);
             const str = i.toString();
 
             const id1 = 'Polygon' + str,
@@ -150,7 +151,7 @@ export default class App extends Component {
                         save = 1;
                     }
                 });
-                if(save == 0){
+                if (save == 0) {
                     array.push(-1);
                 }
             });
