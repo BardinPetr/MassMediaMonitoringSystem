@@ -16,7 +16,7 @@ if __name__ == "__main__":
             "forget to activate a virtual environment?"
         ) from exc
 
-    if sys.argv[1] == "runserver" and DBG:
-        subprocess.call(["/usr/bin/npm", "run-script", "dev"])
+    # if sys.argv[1] == "runserver" and DBG:
+    #     subprocess.call(["/usr/bin/npm", "run-script", "dev"])
 
     execute_from_command_line(sys.argv)

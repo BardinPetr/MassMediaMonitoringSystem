@@ -1,5 +1,6 @@
 import multiprocessing
 import os
+from os import path
 
 from google.cloud import language
 from google.cloud.language import enums
@@ -11,8 +12,9 @@ from pool import MyPool
 
 class GeoExtractor:
     def __init__(self):
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.getcwd().replace('parsers', '') + \
-                                                       '/MassMediaMonitoring-302ad1ab0cf5.json'
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = path.join(
+            os.getcwd().replace('parsers', '')
+            , 'credentials.json')
         self.client = language.LanguageServiceClient()
 
     @staticmethod

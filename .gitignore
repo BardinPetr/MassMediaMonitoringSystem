@@ -471,6 +471,8 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+credentials.json
+
 # End of https://www.gitignore.io/api/node
 
 chromedriver.exe
