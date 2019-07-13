@@ -33,7 +33,6 @@ def generate_map(query):
     if cached is None:
         # dsp.save_posts(query, 100)
         dsp.save_ya_news(query)
-
         pool = MyPool(processes=multiprocessing.cpu_count())
         res = pool.map(process_post, db.get_posts(query)[:40] + db.get_ya_news_by_cache(query)[:40])
         res = reduce(lambda x, y: x + y, res, [])

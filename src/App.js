@@ -113,19 +113,24 @@ export default class App extends Component {
         return this._mapRef.current ? this._mapRef.current.getMap() : null;
     };
 
-    _getColor = (data) => {
+    getColor = (data) => {
         const map = this._getMap();
-        const MIN = Math.min.apply(null, data);
         const MAX = Math.max.apply(null, data);
+        let data1 = []
+        data.forEach((item) => {if(item != -1) data1.push(item);});
+        const MIN = Math.min.apply(null, data1);
         var i;
-        for (i = 0; i < 5; i++) {
-            var color = colorsys.hsvToHex({h: this._map(data[i], MIN, MAX, -120, 0), s: 100, v: 100});
-            console.log(color);
-            var str = i.toString();
-            map.addSource(("Polygon" + str), {type: 'geojson', data: Polygon[i]});
-            map.addLayer(this._mkPolygonLayer(("Polygon" + str), ("Polygon" + str), color));
-            map.addSource(("Line" + str), {type: 'geojson', data: Line[i]});
-            map.addLayer(this._mkLineLayer(("Line" + str), ("Line" + str), color));
+        console.log(Polygon.length);
+        for (i = 0; i < Polygon.length; i++) {
+            if(data[i] != 1){
+                var color = colorsys.hsvToHex({h: this._map(data[i], MIN, MAX, -120, 0), s: 100, v: 100});
+                console.log(color);
+                var str = i.toString();
+                map.addSource(("Polygon" + str), {type: 'geojson', data: Polygon[i]});
+                map.addLayer(this._mkPolygonLayer(("Polygon" + str), ("Polygon" + str), color));
+                map.addSource(("Line" + str), {type: 'geojson', data: Line[i]});
+                map.addLayer(this._mkLineLayer(("Line" + str), ("Line" + str), color));
+            }
         }
 
     };
@@ -137,13 +142,14 @@ export default class App extends Component {
     _creatData = (data) => {
         var array = [];
         for (var item of data) {
-            array.push({"type": "Feature", "geometry": {"type": "Point", "coordinates": [item.lat, item.lng, 0.0]}});
+            array.push({type: "Feature", geometry: {type: "Point", coordinates: [item.lat, item.lng, 0.0]}});
         }
         console.log(array);
 
     };
 
     _handleMapLoaded = (event) => {
+        console.log('map loaded');
         axios.get('/api/clusters', {
                 params: {
                     start: 0,
@@ -154,15 +160,19 @@ export default class App extends Component {
             // handle response
             let array = [];
             console.log('Data response: ', response.data);
-            console.log(Polygon);
             Polygon.forEach((item) => {
+                let save = 0;
                 response.data.forEach((i) => {
                     if (i._id === item.features[0].properties.name) {
                         array.push(i.count);
+                        save = 1;
                     }
                 });
+                if(save == 0){
+                    array.push(-1);
+                }
             });
-            this._getColor(array);
+            this.getColor(array);
         }).catch((error) => {
             // handle error
             console.log('Data response error: ', error);
