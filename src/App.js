@@ -97,7 +97,7 @@ export default class App extends Component {
         });
 
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < data.length; i++) {
             const color = hsvToHex({h: this.mapValue(data[i].display_count, MIN, MAX, -120, 0), s: 100, v: 100});
             console.log(color);
             const str = i.toString();
@@ -143,11 +143,16 @@ export default class App extends Component {
             let array = [];
             console.log('Data response: ', response.data);
             Polygon.forEach((item) => {
+                let save = 0;
                 response.data.forEach((i) => {
                     if (i._id === item.features[0].properties.name) {
                         array.push({display_count: i.count, ...i});
+                        save = 1;
                     }
                 });
+                if(save == 0){
+                    array.push(-1);
+                }
             });
             this.getColor(array);
         }).catch((error) => {
