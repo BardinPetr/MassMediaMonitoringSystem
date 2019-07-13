@@ -1,13 +1,11 @@
-import React, {Component} from "react";
+import AutoSizer from 'react-virtualized/dist/es/AutoSizer';
+import React, {Component} from 'react';
+import Polygon from './data/Polygon';
+import {hsvToHex} from "colorsys";
 import MapGL from 'react-map-gl';
-import {colors} from './SetupColor'
-import Polygon from './data/Polygon'
-import Line from './data/Line'
-import "antd/dist/antd.css";
-import AutoSizer from "react-virtualized/dist/es/AutoSizer";
-
-const axios = require('axios');
-var colorsys = require('colorsys');
+import Line from './data/Line';
+import 'antd/dist/antd.css';
+import axios from 'axios';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiZ29sZGZvcjEiLCJhIjoiY2p4c3BzeThxMGpzejNtbzF5YmgxM2ttOSJ9.f2knfkaI5bt5avgiS5qDlw'; // eslint-disable-line
 
@@ -29,89 +27,39 @@ export default class App extends Component {
         };
 
         this._mapRef = React.createRef();
-        this._handleMapLoaded = this._handleMapLoaded.bind(this);
-        this._onViewportChang = this._onViewportChange.bind(this);
-        //this.publishData = this.publishData.bind(this);
+        this.handleMapLoaded = this.handleMapLoaded.bind(this);
     };
 
-    componentDidMount() {
-
-    };
-
-
-    _mkHeatmapLayer = (id, source, count) => {
-        const MAX_ZOOM_LEVEL = 12;
+    makePolygonLayer = (id, source, color) => {
         return {
-            id, source, maxzoom: MAX_ZOOM_LEVEL, type: 'heatmap',
+            id, source,
+            type: 'fill',
+            layout: {},
             paint: {
-                'heatmap-weight': ['interpolate', ['linear'], ['get', 'mag'], 0, 0, 6, 1],
-                'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, MAX_ZOOM_LEVEL, 3],
-                'heatmap-color': colors[count],
-                'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, MAX_ZOOM_LEVEL, 20],
-                'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 7, 1, 9, 0]
-
-            }
-        };
-    };
-
-    _mkCircleLayer = (id, source, count) => {
-        const MIN_ZOOM_LEVEL = 7;
-        return {
-            id, source, minzoom: MIN_ZOOM_LEVEL, type: 'circle',
-            paint: {
-                "circle-radius": ["interpolate", ["linear"], ["zoom"], 7, ["interpolate", ["linear"], ["get", "mag"], 1, 1, 6, 4], 16,
-                    ["interpolate", ["linear"], ["get", "mag"], 1, 5, 6, 50]],
-                "circle-color": ["interpolate",
-                    ["linear"],
-                    ["get", "mag"],
-                    1, "rgba(33,102,172,0)",
-                    2, "rgb(103,169,207)",
-                    3, "rgb(209,229,240)",
-                    4, "rgb(253,219,199)",
-                    5, "rgb(239,138,98)",
-                    6, "rgb(178,24,43)"
-                ],
-                "circle-stroke-color": "white",
-                "circle-stroke-width": 1,
-                "circle-opacity": ["interpolate", ["linear"], ["zoom"], 7, 0, 8, 1]
+                'fill-color': color,
+                'fill-opacity': 0.2
             }
         }
     };
 
-    _mkPolygonLayer = (id, source, color) => {
+    makeLineLayer = (id, source, color) => {
         return {
             id, source,
-            "type": "fill",
-            "layout": {},
-            "paint": {
-                "fill-color": color,
-                "fill-opacity": 0.2
-            }
-        }
-    };
-
-    _mkLineLayer = (id, source, color) => {
-        return {
-            id, source,
-            "type": "line",
-            "layout": {
-                "line-join": "round",
-                "line-cap": "round"
+            type: 'line',
+            layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
             },
-            "paint": {
-                "line-color": color,
-                "line-width": 3
+            paint: {
+                'line-color': color,
+                'line-width': 3
             }
         }
     };
 
-    _onViewportChange = (viewport) => {
-        this.setState({viewport});
-    };
+    _onViewportChange = (viewport) => this.setState({viewport});
 
-    _getMap = () => {
-        return this._mapRef.current ? this._mapRef.current.getMap() : null;
-    };
+    getMap = () => this._mapRef.current ? this._mapRef.current.getMap() : null;
 
     getColor = (data) => {
         const map = this._getMap();
@@ -132,24 +80,11 @@ export default class App extends Component {
                 map.addLayer(this._mkLineLayer(("Line" + str), ("Line" + str), color));
             }
         }
-
     };
 
-    _map = (x, in_min, in_max, out_min, out_max) => {
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-    };
+    mapValue = (x, in_min, in_max, out_min, out_max) => (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 
-    _creatData = (data) => {
-        var array = [];
-        for (var item of data) {
-            array.push({type: "Feature", geometry: {type: "Point", coordinates: [item.lat, item.lng, 0.0]}});
-        }
-        console.log(array);
-
-    };
-
-    _handleMapLoaded = (event) => {
-        console.log('map loaded');
+    handleMapLoaded = () => {
         axios.get('/api/clusters', {
                 params: {
                     start: 0,
@@ -178,44 +113,6 @@ export default class App extends Component {
             console.log('Data response error: ', error);
         });
     };
-    
-    _mkFeatureCollection = (features) => {
-        {
-            'FeatureCollection', features
-        }
-    };
-
-    setMapData = (features) => {
-        const map = this._getMap();
-        if (map) {
-            map.getSource(SOURCE_ID[0]).setData(this._mkFeatureCollection(features));
-        }
-    };
-
-
-    buttonPressed(data, func, e) {
-        console.log('Data search', data);
-
-
-        //axios regiest with data
-        /*
-        axios.get('/api/points', {
-                params: {
-                    query: data
-                }
-            }
-        ).then((response) => {
-            // handle reaponse
-            console.log('Data response', response.data);
-
-            func(response.data);
-        }).catch((error) => {
-            // handle error
-            console.log('Data response error', error);
-
-        });*/
-    };
-
 
     render() {
         return (
@@ -230,24 +127,10 @@ export default class App extends Component {
                             mapStyle={'mapbox://styles/mapbox/light-v10'}
                             onViewportChange={this._onViewportChange}
                             mapboxApiAccessToken={MAPBOX_TOKEN}
-                            onLoad={this._handleMapLoaded}
+                            onLoad={this.handleMapLoaded}
                         />)}
                 </AutoSizer>
             </div>
         );
     }
 }
-
-//mapConfig
-//const mapStateToProps = state => state;
-//const dispatchToProps = dispatch => ({dispatch});
-//onLoad={this._handleMapLoaded}
-//export default connect(mapStateToProps, dispatchToProps)(App);
-
-
-/*<KeplerGl
-                        mapboxApiAccessToken={MAPBOX_TOKEN}
-                        id="map"
-                        width={width}
-                        height={height}
-                    />*/
