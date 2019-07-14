@@ -18,4 +18,7 @@ class DBSourcesConnector:
         self.data_base.add_news(self.YandexN.upload_news_from_search_count(query, count))
 
     def save_twits(self, query, count):
-        self.data_base.add_twits(self.Twitter.get_posts(query, count))
+        pass
+
+    def save_vk_users():
+        self.data_base.
