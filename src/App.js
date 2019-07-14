@@ -2,33 +2,20 @@ import AutoSizer from 'react-virtualized/dist/es/AutoSizer';
 import React, {Component} from 'react';
 import Polygon from './data/Polygon';
 import {hsvToHex} from "colorsys";
-import MapGL, {FullscreenControl, NavigationControl} from 'react-map-gl';
+import MapGL from 'react-map-gl';
 import Line from './data/Line';
 import 'antd/dist/antd.css';
 import axios from 'axios';
 import {DatePickerBar} from "./components/DatePickerBar";
 import {PlotMarker} from "./components/PlotMarker";
 import {getGeoCenter} from "./utils/GeoUtils";
+import {InfoDrawer} from "./components/InfoDrawer";
+import {mapValue} from "./utils/CalcUtils";
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiZ29sZGZvcjEiLCJhIjoiY2p4c3BzeThxMGpzejNtbzF5YmgxM2ttOSJ9.f2knfkaI5bt5avgiS5qDlw'; // eslint-disable-line
 
-const fullscreenControlStyle = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    padding: '10px'
-};
-
-const navStyle = {
-    position: 'absolute',
-    top: 36,
-    left: 0,
-    padding: '10px'
-};
-
 
 export default class App extends Component {
-
     constructor(props) {
         super(props);
 
@@ -41,7 +28,9 @@ export default class App extends Component {
                 pitch: 0
             },
             mapSources: [],
-            points: []
+            points: [],
+            drawerVisibility: false,
+            drawerData: {}
         };
 
         this._mapRef = React.createRef();
@@ -100,7 +89,7 @@ export default class App extends Component {
         for (let i = 0; i < data.length; i++) {
             if (data[i] === -1) continue;
 
-            const color = hsvToHex({h: this.mapValue(data[i].display_count, MIN, MAX, -120, 0), s: 100, v: 100});
+            const color = hsvToHex({h: mapValue(data[i].display_count, MIN, MAX, -120, 0), s: 100, v: 100});
             const str = i.toString();
 
             const id1 = 'Polygon' + str,
@@ -126,8 +115,6 @@ export default class App extends Component {
     renderCityMarker = (data, index) => <PlotMarker key={`marker-${index}`}
                                                     data={data}/>;
 
-    mapValue = (x, in_min, in_max, out_min, out_max) => (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-
     handleMapLoaded = () => {
         this.refreshData([0, 10000000000])
     };
@@ -151,7 +138,7 @@ export default class App extends Component {
                         save = 1;
                     }
                 });
-                if (save == 0) {
+                if (save === 0) {
                     array.push(-1);
                 }
             });
@@ -164,7 +151,7 @@ export default class App extends Component {
 
     onMapClick = (e) => {
         let data = JSON.parse(e.features[0].properties.data);
-        console.log(data._id)
+        this.setState({drawerData: data, drawerVisibility: true});
     };
 
     render() {
@@ -184,16 +171,15 @@ export default class App extends Component {
                             onClick={this.onMapClick}
                         >
                             {this.state.points.map(this.renderCityMarker)}
-
-                            <div className="fullscreen" style={fullscreenControlStyle}>
-                                <FullscreenControl/>
-                            </div>
-                            <div className="nav" style={navStyle}>
-                                <NavigationControl/>
-                            </div>
                         </MapGL>)}
                 </AutoSizer>
                 <DatePickerBar onSearch={(x) => this.refreshData(x)}/>
+                <InfoDrawer data={this.state.drawerData}
+                            open={this.state.drawerVisibility}
+                            onClose={() => {
+                                this.setState({drawerVisibility: false})
+                            }}/>
+                />
             </div>
         );
     }

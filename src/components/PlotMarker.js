@@ -12,7 +12,8 @@ export class PlotMarker extends BaseControl {
             position: 'absolute',
             left: x,
             top: y,
-            WebkitTransform: `translate(-50%, 0)`
+            WebkitTransform: `translate(-50%, 0)`,
+            fontcolor: "#fff"
         };
 
         return (
