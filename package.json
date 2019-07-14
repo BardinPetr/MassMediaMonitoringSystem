@@ -3,6 +3,8 @@
   "version": "0.2.0",
   "private": true,
   "dependencies": {
+    "@vx/legend": "0.0.189",
+    "@vx/scale": "0.0.189",
     "antd": "^3.7.3",
     "axios": "^0.18.0",
     "colorsys": "^1.0.22",
