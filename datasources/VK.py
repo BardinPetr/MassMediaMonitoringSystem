@@ -50,7 +50,7 @@ class VK:
 
         genders = {'femn': 0, 'masc': 1, 'neut': -1}
 
-        users_list = [i['id'] for i in get_users.get_all_posts() if i['id']>1]
+        users_list = [i['owner_id'] for i in get_users.get_all_posts() if i['owner_id']>1]
 
         
         list_info = self.vkapi.users.get(user_ids=users_list, v=5.101, fields = "sex, bdate, uid, photo_max_orig", lang="ru")
@@ -106,6 +106,7 @@ class VK:
                             'user_id' : i['id'] 
                 }
 
+            get_users.add_vk_user(user_info)
             users_info.append(user_info)
             print ("user with id:", i['id'], 'was added')
 

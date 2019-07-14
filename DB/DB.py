@@ -83,6 +83,9 @@ class DB:
 
     def add_vk_users(self, mylist):
         return self.vk_users_collection.insert_many(mylist).inserted_ids
-        
+
+    def add_vk_user(self, element):
+        return self.vk_users_collection.insert_one(element)
+
 
     
