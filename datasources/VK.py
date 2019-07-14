@@ -1,7 +1,16 @@
 import vk
 import json
 
+from math import inf
+
 from os import path, getcwd
+import time, datetime
+
+from analytics.FaceAnalyser import FaceAnalyser
+from DB.DB import DB
+
+import pymorphy2
+morph = pymorphy2.MorphAnalyzer()
 
 
 
@@ -35,9 +44,74 @@ class VK:
         obj = self.vkapi.utils.resolveScreenName(screen_name=nickname, v=5.12)
         return obj
 
-    def get_profile_info(self, id):
+    def get_users_info(self):
 
-        profile_info = self.vkapi.utils.resolveScreenName(id, v=5.12,
-                                                          fields='nickname, screen_name, sex, bdate (birthdate), city, country, timezone, photo, photo_medium, photo_big, has_mobile, contacts, education, online, counters, relation, last_seen, activity, can_write_private_message, can_see_all_posts, can_post, universities')
+        get_users = DB()
 
-        return profile_info
+        genders = {'femn': 0, 'masc': 1, 'neut': -1}
+
+        users_list = [i['id'] for i in get_users.get_all_posts() if i['id']>1]
+
+        
+        list_info = self.vkapi.users.get(user_ids=users_list, v=5.101, fields = "sex, bdate, uid, photo_max_orig", lang="ru")
+
+        users_info = []
+
+        for i in list_info:
+
+            if ('bdate' in i) and ('sex' in i) and (len(i['bdate']))>5:
+                print(i['bdate'])
+                f_per = int(time.mktime(datetime.datetime.strptime(i['bdate'].replace('.','/'), "%d/%m/%Y").timetuple()))
+                time_age = int((int(time.time())-f_per)/31536000)
+                user_info = {'age': filter(lambda x: x[1][0] <= time_age <= x[1][1],
+                              enumerate([[0, 14],
+                                         [15, 21],
+                                         [22, 35],
+                                         [36, 50],
+                                         [50, inf]])).__next__()[0],
+                            'sex' : i['sex']-1,
+                            'user_id': i['id']}
+                
+            
+            else:
+                try:
+                    face_an = FaceAnalyser()
+
+                    age_and_sex = face_an.process(i['photo_max_orig'])
+                except Exception as e:
+                    print(e)
+                    age_and_sex = {"sex": -1, "age": -1}
+
+                if age_and_sex['sex'] == -1 and age_and_sex['age'] == -1:
+
+                    #print(i['first_name'])
+                    #print(type(i['first_name']))
+                    print(i['first_name'])
+
+                    if morph.parse(i['first_name'])[0].tag.gender is not None:
+
+                        sex = genders[morph.parse(i['first_name'])[0].tag.gender]
+
+                    else:
+
+                        sex = -1
+
+                    user_info = {'age': -1,
+                                'sex' : sex,
+                                'user_id': i['id']
+                    }
+                
+                user_info = {'age': age_and_sex['age'],
+                            'sex' : age_and_sex['sex'],
+                            'user_id' : i['id'] 
+                }
+
+            users_info.append(user_info)
+            print ("user with id:", i['id'], 'was added')
+
+
+
+
+
+        return users_info
+

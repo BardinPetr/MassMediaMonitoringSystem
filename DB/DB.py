@@ -15,12 +15,20 @@ class DB:
         self.comments_collection = self.mydb["Comments"]
         self.cache_collection = self.mydb["Cache"]
         self.twits_collection = self.mydb['Twits']
+        self.vk_users_collection = self.mydb['Vk_users']
 
     def add_posts(self, mylist):
         return self.posts_collection.insert_many(mylist).inserted_ids
 
     def get_posts(self, query=None):
         return list(self.posts_collection.find({} if query is None else {"query": query}))
+
+    def get_all_posts(self):
+        listt = list(self.posts_collection.find())
+        print('Posts collected successfully')
+        return listt
+
+
 
     def aggregate_posts(self, start, end):
         pipeline = [
@@ -72,3 +80,9 @@ class DB:
 
     def add_twits(self, mylist):
         return self.twits_collection.insert_many(mylist).inserted_ids
+
+    def add_vk_users(self, mylist):
+        return self.vk_users_collection.insert_many(mylist).inserted_ids
+        
+
+    
