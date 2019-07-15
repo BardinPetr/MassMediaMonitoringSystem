@@ -11,6 +11,7 @@ from analytics.FaceAnalyser import FaceAnalyser
 
 morph = pymorphy2.MorphAnalyzer()
 
+import vk
 
 class VK:
 
@@ -29,7 +30,7 @@ class VK:
         newsfeed = []
         print('Start parsing')
         for i in range(5):
-            feed = self.vkapi.newsfeed.search(q=query, count=1, filters='post', v=5.12, offset=i * 200)
+            feed = self.vkapi.newsfeed.search(q=query, count=200, filters='post', v=5.12, offset=i * 200)
             for news in feed['items']:
                 newsfeed.append({'text': news['text'],
                                  'date': news['date'],
@@ -37,6 +38,7 @@ class VK:
                                  'owner_id': news['owner_id'],
                                  'id': news['id'],
                                  'polarity': -2})
+        print(len(newsfeed))
         return newsfeed
 
     def nickname2obj(self, nickname):
@@ -49,7 +51,11 @@ class VK:
 
         genders = {'femn': 0, 'masc': 1, 'neut': -1}
 
-        users_list = [i['owner_id'] for i in get_users.get_all_posts() if i['owner_id'] > 1]
+        a = get_users.get_all_posts()
+        print(len(a))
+
+        users_list = [i['owner_id'] for i in a if i['owner_id'] > 1]
+        print(len(users_list))
 
         list_info = self.vkapi.users.get(user_ids=users_list, v=5.101, fields="sex, bdate, uid, photo_max_orig",
                                          lang="ru")
@@ -105,9 +111,13 @@ class VK:
                              'sex': age_and_sex['sex'],
                              'user_id': i['id']
                              }
-
-            get_users.add_vk_user(user_info)
+            try:
+                get_users.add_vk_user(user_info)
+                print("user with id:", i['id'], 'was added')
+            except:
+                print('User already exist')
             users_info.append(user_info)
-            print("user with id:", i['id'], 'was added')
+            
 
-        return users_info
+        #return users_info
+        return ''

@@ -214,7 +214,10 @@ class DB:
         return self.twits_collection.insert_many(mylist).inserted_ids
 
     def add_vk_users(self, mylist):
-        return self.vk_users_collection.insert_many(mylist).inserted_ids
+        try:
+            return self.vk_users_collection.insert_many(mylist).inserted_ids
+        except:
+            print('nonooo')
 
     def add_vk_user(self, element):
         return self.vk_users_collection.insert_one(element)
