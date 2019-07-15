@@ -228,7 +228,7 @@ export default class App extends Component {
     };
 
     refreshData = (dates) => {
-        axios.get('/api/clusters', {
+        axios.get('/api/clusters-sa', {
                 params: {
                     start: dates[0],
                     end: dates[1]
@@ -240,8 +240,8 @@ export default class App extends Component {
             Polygon.forEach((item) => {
                 let save = 0;
                 response.data.forEach((i) => {
-                    if (i._id === item.features[0].properties.name) {
-                        array.push({...i});
+                    if (i.name === item.features[0].properties.name) {
+                        array.push(i);
                         save = 1;
                     }
                 });
