@@ -219,5 +219,4 @@ class DB:
     def add_vk_user(self, element):
         return self.vk_users_collection.insert_one(element)
 
-
 # print(DB().aggregate_posts_sa(1562830000, 1662840000))

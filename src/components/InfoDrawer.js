@@ -18,7 +18,7 @@ export class InfoDrawer extends React.Component {
 
     renderPieSex = () => {
         let height = this.dwidth - 15 * 2, width = this.dwidth - 15 * 2;
-        const data = this.props.data.sex;
+        const data = this.props.data.sex.filter((x) => x.value !== 0);
         return (
             <Pie
                 width={width}
@@ -58,7 +58,7 @@ export class InfoDrawer extends React.Component {
 
     renderPieAge = () => {
         let height = this.dwidth - 15 * 2, width = this.dwidth - 15 * 2;
-        const data = this.props.data.age;
+        const data = this.props.data.age.filter((x) => x.value !== 0);
         return (
             <Pie
                 width={width}

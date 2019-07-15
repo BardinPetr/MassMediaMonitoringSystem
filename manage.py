@@ -1,5 +1,4 @@
 import os
-import subprocess
 import sys
 
 DBG = os.environ.get("NODE_ENV", "development") == "development"

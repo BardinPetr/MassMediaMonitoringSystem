@@ -8,10 +8,6 @@ const moment = require('moment');
 
 export class DatePickerBar extends React.Component {
 
-    static disabledDate(current) {
-        return current > moment() || current < moment(new Date(2019, 6, 1));
-    }
-
     componentDidMount() {
         this.setState({dates: [moment(), moment()]})
     }
@@ -27,7 +23,7 @@ export class DatePickerBar extends React.Component {
         return (
             <div style={DivStyle}>
                 <RangePicker
-                    disabledDate={DatePickerBar.disabledDate}
+                    disabledDate={(current) => current > moment()}
                     showTime={{
                         hideDisabledOptions: true
                     }}
