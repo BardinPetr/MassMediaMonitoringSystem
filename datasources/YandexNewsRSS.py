@@ -44,7 +44,7 @@ class YandexNews(object):
                     if (i < count):
                         i += 1
                         try:
-                            if(e.div.h2.a.get('href')[:4]== 'http'):
+                            if not (e.div.h2.a.get('href')[:4]== 'http'):
                                 un = 'https://news.yandex.by' + e.div.h2.a.get('href')
                                 au.append(un)
                         except Exception as e:
