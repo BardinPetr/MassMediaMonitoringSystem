@@ -8,6 +8,8 @@
     "@nivo/pie": "^0.59.1",
     "antd": "^3.20.2",
     "axios": "^0.19.0",
+    "@vx/legend": "0.0.189",
+    "@vx/scale": "0.0.189",
     "colorsys": "^1.0.22",
     "customize-cra": "^0.2.14",
     "fast-json-stable-stringify": "^2.0.0",

@@ -8,6 +8,7 @@ import 'antd/dist/antd.css';
 import axios from 'axios';
 import {DatePickerBar} from "./components/DatePickerBar";
 import {PlotMarker} from "./components/PlotMarker";
+import {LegendBar} from "./components/LegendBar"
 import {getGeoCenter} from "./utils/GeoUtils";
 import {InfoDrawer} from "./components/InfoDrawer";
 import {mapValue} from "./utils/CalcUtils";
@@ -30,7 +31,12 @@ export default class App extends Component {
             mapSources: [],
             points: [],
             drawerVisibility: false,
-            drawerData: {}
+            drawerData: {},
+            loaded: 0,
+            boarderCity: [],
+            dataResponse: [],
+            colorCity: [],
+            dataArray: [0, 0, 0, 0, 0, 0]
         };
 
         this._mapRef = React.createRef();
@@ -64,14 +70,105 @@ export default class App extends Component {
         }
     };
 
-    _onViewportChange = (viewport) => this.setState({viewport});
+    _onViewportChange = (viewport) => {
+        this.setState({viewport});
+        if (this.state.loaded === 1) {
+            this.inMap();
+        }
+    };
+
+    inMap = () => {
+        let coord = this.getMap().getBounds();
+        let ar = [];
+        this.state.boarderCity.forEach((item, i) => {
+            if ((coord._sw.lat < item._ne.lat) &&
+                (coord._sw.lng < item._ne.lng) &&
+                (coord._ne.lat > item._sw.lat) &&
+                (coord._ne.lng > item._sw.lng)) {
+                ar.push(item);
+            } else {
+                ar.push(-1);
+            }
+        });
+        this.setColor(ar);
+    };
 
     getMap = () => this._mapRef.current ? this._mapRef.current.getMap() : null;
 
-    getColor = (data) => {
+    setColor = (data) => {
+        let array = [];
+        data.forEach((item, i) => {
+            if (item !== -1 && this.state.dataResponse[i] !== -1) {
+                array.push(this.state.dataResponse[i])
+            } else {
+                array.push(-1);
+            }
+        });
+
         const map = this.getMap();
-        const MIN = Math.min.apply(null, data.filter((x) => x !== -1).map((x) => x.count));
-        const MAX = Math.max.apply(null, data.map((x) => x.count));
+        const MIN = Math.min.apply(null, array.filter((x) => (x !== -1)).map((x) => x.count));
+        const MAX = Math.max.apply(null, array.filter((x) => (x !== -1)).map((x) => x.count));
+
+        let col = [];
+        let delt = (MAX - MIN) / 5;
+        for (let i = 0; i < 6; i++) {
+            col.push(Math.round(MIN + (delt * i)));
+        }
+
+        let rt = 0;
+
+        if (MIN === Infinity) {
+            col = [0, 0, 0, 0, 0, 0]
+        }
+
+        // console.log(col);
+        for (let i = 0; i < array.length; i++) {
+            if (this.state.dataResponse[i] === -1) continue;
+
+            let color = -1;
+            if (MIN !== Infinity) {
+                if (array[i] !== -1) {
+                    color = hsvToHex({h: mapValue(array[i].count, MIN, MAX, -120, 0), s: 100, v: 100});
+                    if (MIN === MAX) {
+                        color = '#0000ff';
+                    }
+                }
+            }
+
+            if (this.state.colorCity[i] === color) continue;
+            rt = 1;
+
+            const str = i.toString();
+            const id1 = 'Polygon' + str,
+                id2 = 'Line' + str;
+
+            if (color === -1) {
+                try {
+                    map.removeLayer(id1);
+                    map.removeLayer(id2);
+                } catch {
+                }
+            } else {
+                if (this.state.colorCity[i] !== -1) {
+                    try {
+                        map.removeLayer(id1);
+                        map.removeLayer(id2);
+                    } catch {
+                    }
+                }
+                map.addLayer(this.makePolygonLayer(id1, id1, color));
+                map.addLayer(this.makeLineLayer(id2, id2, color));
+            }
+            this.state.colorCity[i] = color;
+        }
+        if (rt === 1) {
+            this.setState({dataArray: col});
+        }
+
+    };
+
+    getData = (data) => {
+        const map = this.getMap();
 
         this.state.mapSources.forEach((e) => {
             try {
@@ -82,27 +179,21 @@ export default class App extends Component {
         });
         this.setState({
             mapSources: [],
-            points: []
+            points: [],
+            dataResponse: data
         });
-
 
         for (let i = 0; i < data.length; i++) {
             if (data[i] === -1) continue;
 
-            const color = hsvToHex({h: mapValue(data[i].count, MIN, MAX, -120, 0), s: 100, v: 100});
             const str = i.toString();
-
             const id1 = 'Polygon' + str,
                 id2 = 'Line' + str;
-
             let d = Polygon[i];
-            d.features[0].properties["data"] = data[i];
+            d.features[0].properties["data"] = this.state.dataResponse[i];
 
             map.addSource(id1, {type: 'geojson', data: d});
             map.addSource(id2, {type: 'geojson', data: Line[i]});
-
-            map.addLayer(this.makePolygonLayer(id1, id1, color));
-            map.addLayer(this.makeLineLayer(id2, id2, color));
 
             const center = getGeoCenter(Polygon[i].features[0].geometry.coordinates[0]);
             this.setState({
@@ -110,13 +201,28 @@ export default class App extends Component {
                 points: [...this.state.points, {geo: center, data: data[i]}]
             })
         }
+        this.inMap();
     };
 
     renderCityMarker = (data, index) => <PlotMarker key={`marker-${index}`}
                                                     data={data}/>;
 
     handleMapLoaded = () => {
-        this.refreshData([0, 10000000000])
+        this.refreshData([0, 10000000000]);
+        this.setState({loaded: 1});
+        let array = [];
+        Polygon.forEach((item, i) => {
+            let lng = item.features[0].geometry.coordinates[0].map((x) => x[0]);
+            let lat = item.features[0].geometry.coordinates[0].map((x) => x[1]);
+            let array1 = this.state.boarderCity;
+            array1.push({
+                _ne: {lng: Math.max.apply(null, lng), lat: Math.max.apply(null, lat)},
+                _sw: {lng: Math.min.apply(null, lng), lat: Math.min.apply(null, lat)}
+            });
+            this.setState({boarderCity: array1});
+            array.push(-1);
+        });
+        this.setState({colorCity: array, dataResponse: array});
     };
 
     refreshData = (dates) => {
@@ -127,7 +233,6 @@ export default class App extends Component {
                 }
             }
         ).then((response) => {
-            // handle response
             let array = [];
             console.log('Data response: ', response.data);
             Polygon.forEach((item) => {
@@ -142,11 +247,8 @@ export default class App extends Component {
                     array.push(-1);
                 }
             });
-            this.getColor(array);
-        }).catch((error) => {
-            // handle error
-            console.log('Data response error: ', error);
-        });
+            this.getData(array);
+        }).catch((error) => console.log('Data response error: ', error));
     };
 
     onMapClick = (e) => {
@@ -174,6 +276,7 @@ export default class App extends Component {
                         </MapGL>)}
                 </AutoSizer>
                 <DatePickerBar onSearch={(x) => this.refreshData(x)}/>
+                <LegendBar dataArray={this.state.dataArray}/>
                 <InfoDrawer data={this.state.drawerData}
                             open={this.state.drawerVisibility}
                             onClose={() => {

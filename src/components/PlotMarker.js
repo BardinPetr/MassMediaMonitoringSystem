@@ -5,11 +5,11 @@ export class PlotMarker extends BaseControl {
     _render() {
         const {data: point} = this.props;
         const [x, y] = this._context.viewport.project(point.geo);
-        console.log();
         const markerStyle = {
             fontSize: 'large',
             fontWeight: 600,
             position: 'absolute',
+            zIndex: 1000,
             left: x,
             top: y,
             WebkitTransform: `translate(-50%, 0)`,
