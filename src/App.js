@@ -31,7 +31,7 @@ export default class App extends Component {
             mapSources: [],
             points: [],
             drawerVisibility: false,
-            drawerData: {}
+            drawerData: {},
             loaded: 0,
             boarderCity: [],
             dataResponse: [],
@@ -72,38 +72,35 @@ export default class App extends Component {
 
     _onViewportChange = (viewport) => {
         this.setState({viewport});
-        if(this.state.loaded === 1){
+        if (this.state.loaded === 1) {
             this.inMap();
         }
-    }
+    };
 
     inMap = () => {
         let coord = this.getMap().getBounds();
         let ar = [];
-        this.state.boarderCity.forEach((item, i) =>
-        {
+        this.state.boarderCity.forEach((item, i) => {
             if ((coord._sw.lat < item._ne.lat) &&
                 (coord._sw.lng < item._ne.lng) &&
                 (coord._ne.lat > item._sw.lat) &&
-                (coord._ne.lng > item._sw.lng)){
-                    ar.push(item);
-                }
-            else{
+                (coord._ne.lng > item._sw.lng)) {
+                ar.push(item);
+            } else {
                 ar.push(-1);
             }
-        })
+        });
         this.setColor(ar);
-    }
+    };
 
     getMap = () => this._mapRef.current ? this._mapRef.current.getMap() : null;
 
     setColor = (data) => {
-        let array = []
+        let array = [];
         data.forEach((item, i) => {
-            if(item !== -1 && this.state.dataResponse[i] !== -1){
+            if (item !== -1 && this.state.dataResponse[i] !== -1) {
                 array.push(this.state.dataResponse[i])
-            }
-            else{
+            } else {
                 array.push(-1);
             }
         });
@@ -111,49 +108,48 @@ export default class App extends Component {
         const map = this.getMap();
         const MIN = Math.min.apply(null, array.filter((x) => (x !== -1)).map((x) => x.count));
         const MAX = Math.max.apply(null, array.filter((x) => (x !== -1)).map((x) => x.count));
-        
-        let col = []
+
+        let col = [];
         let delt = (MAX - MIN) / 5;
-        for(let i = 0; i < 6; i++){
-            col.push(MIN + (delt * i));
+        for (let i = 0; i < 6; i++) {
+            col.push(Math.round(MIN + (delt * i)));
         }
-        
+
         let rt = 0;
 
-        if(MIN === Infinity){
+        if (MIN === Infinity) {
             col = [0, 0, 0, 0, 0, 0]
         }
 
-        console.log(col);
-        for(let i = 0; i < array.length; i++){
+        // console.log(col);
+        for (let i = 0; i < array.length; i++) {
             if (this.state.dataResponse[i] === -1) continue;
 
-            const color = -1;
-            if(MIN !== Infinity){
-                if(array[i] !== -1){
-                    color = hsvToHex({h: this.mapValue(array[i].count, MIN, MAX, -120, 0), s: 100, v: 100});
-                    if(MIN === MAX){
+            let color = -1;
+            if (MIN !== Infinity) {
+                if (array[i] !== -1) {
+                    color = hsvToHex({h: mapValue(array[i].count, MIN, MAX, -120, 0), s: 100, v: 100});
+                    if (MIN === MAX) {
                         color = '#0000ff';
                     }
                 }
             }
 
-            if(this.state.colorCity[i] === color) continue;
+            if (this.state.colorCity[i] === color) continue;
             rt = 1;
 
             const str = i.toString();
             const id1 = 'Polygon' + str,
                 id2 = 'Line' + str;
 
-            if (color === -1){
+            if (color === -1) {
                 try {
                     map.removeLayer(id1);
                     map.removeLayer(id2);
                 } catch {
                 }
-            }
-            else {
-                if(this.state.colorCity[i] !== -1){
+            } else {
+                if (this.state.colorCity[i] !== -1) {
                     try {
                         map.removeLayer(id1);
                         map.removeLayer(id2);
@@ -165,11 +161,11 @@ export default class App extends Component {
             }
             this.state.colorCity[i] = color;
         }
-        if(rt === 1){
+        if (rt === 1) {
             this.setState({dataArray: col});
         }
 
-    }
+    };
 
     getData = (data) => {
         const map = this.getMap();
@@ -212,15 +208,17 @@ export default class App extends Component {
                                                     data={data}/>;
 
     handleMapLoaded = () => {
-        this.refreshData([0, 10000000000])
+        this.refreshData([0, 10000000000]);
         this.setState({loaded: 1});
         let array = [];
         Polygon.forEach((item, i) => {
             let lng = item.features[0].geometry.coordinates[0].map((x) => x[0]);
             let lat = item.features[0].geometry.coordinates[0].map((x) => x[1]);
             let array1 = this.state.boarderCity;
-            array1.push({_ne:{lng: Math.max.apply(null, lng), lat: Math.max.apply(null, lat)},
-                _sw:{lng: Math.min.apply(null, lng), lat: Math.min.apply(null, lat)}});
+            array1.push({
+                _ne: {lng: Math.max.apply(null, lng), lat: Math.max.apply(null, lat)},
+                _sw: {lng: Math.min.apply(null, lng), lat: Math.min.apply(null, lat)}
+            });
             this.setState({boarderCity: array1});
             array.push(-1);
         });

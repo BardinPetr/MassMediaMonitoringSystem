@@ -1902,6 +1902,30 @@
     lodash.unescape "4.0.1"
     semver "5.5.0"
 
+"@vx/group@0.0.189":
+  version "0.0.189"
+  resolved "https://registry.yarnpkg.com/@vx/group/-/group-0.0.189.tgz#030787b66ad5a48ec612ecc0e7df3fcfeb7b894c"
+  integrity sha512-qZCdAK/A/AjyycZT8cjFQDJb9l5eDkMYfYXdGDFLn60w1aW5skMkPZ7YyWqg1U6BLcibPWu7uFVjS1MoUCUHUg==
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.6.2"
+
+"@vx/legend@0.0.189":
+  version "0.0.189"
+  resolved "https://registry.yarnpkg.com/@vx/legend/-/legend-0.0.189.tgz#964a695f85f39ec05603e595c8252d96617e857a"
+  integrity sha512-Mq0hQyJdvzcrtOKHyQ2Dz7iBgBUAfqV87l/QYnYIasJs7lPQsGKpgka4tvtyZB+cgG0To6OP775X1jWZ31mHvQ==
+  dependencies:
+    "@vx/group" "0.0.189"
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
+
+"@vx/scale@0.0.189":
+  version "0.0.189"
+  resolved "https://registry.yarnpkg.com/@vx/scale/-/scale-0.0.189.tgz#c185a7c36a0f23653358c86c0593159d3e0f8854"
+  integrity sha512-GzSv3HNBPjkIGh74jAg4fLCVf5z/EkvDTRi+u5ZxDHCM3jHV4Y13uXX5ozBUQ7URrYcUWOoEFC7L/QBFUp4yPQ==
+  dependencies:
+    d3-scale "^2.0.0"
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"
@@ -4231,6 +4255,18 @@ d3-scale@^1.0.5, d3-scale@^1.0.6:
     d3-array "^1.2.0"
     d3-collection "1"
     d3-color "1"
+    d3-format "1"
+    d3-interpolate "1"
+    d3-time "1"
+    d3-time-format "2"
+
+d3-scale@^2.0.0:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-2.2.2.tgz#4e880e0b2745acaaddd3ede26a9e908a9e17b81f"
+  integrity sha512-LbeEvGgIb8UMcAa0EATLNX0lelKWGYDQiPdHj+gLblGVhGLyNbaCn3EvrJf0A3Y/uOOU5aD6MTh5ZFCdEwGiCw==
+  dependencies:
+    d3-array "^1.2.0"
+    d3-collection "1"
     d3-format "1"
     d3-interpolate "1"
     d3-time "1"
