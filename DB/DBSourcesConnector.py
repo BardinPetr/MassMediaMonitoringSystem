@@ -19,6 +19,3 @@ class DBSourcesConnector:
 
     def save_twits(self, query, count):
         pass
-
-    def save_vk_users():
-        self.data_base.

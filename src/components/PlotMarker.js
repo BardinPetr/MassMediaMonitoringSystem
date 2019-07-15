@@ -19,7 +19,7 @@ export class PlotMarker extends BaseControl {
         return (
             <div ref={this._containerRef}
                  style={markerStyle}>
-                {this._context.viewport.zoom > 9 ? point.data.display_count : ""}
+                {this._context.viewport.zoom > 9 ? point.data.count : ""}
             </div>
         );
     }

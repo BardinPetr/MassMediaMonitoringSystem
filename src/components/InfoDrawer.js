@@ -18,7 +18,7 @@ export class InfoDrawer extends React.Component {
 
     renderPieSex = () => {
         let height = this.dwidth - 15 * 2, width = this.dwidth - 15 * 2;
-        const data = this.props.data.sex; //[{id: "female", polarity: 0.2, value: 324}, {id: "male", polarity: 0.6, value: 634}];
+        const data = this.props.data.sex;
         return (
             <Pie
                 width={width}
@@ -59,13 +59,6 @@ export class InfoDrawer extends React.Component {
     renderPieAge = () => {
         let height = this.dwidth - 15 * 2, width = this.dwidth - 15 * 2;
         const data = this.props.data.age;
-        /*[
-            {id: "0-14 лет", polarity: 0.2, value: 324},
-            {id: "15-21 лет", polarity: 1, value: 624},
-            {id: "22-35 лет", polarity: 0.3, value: 134},
-            {id: "36-50 лет", polarity: 0.7, value: 32},
-            {id: "50-inf лет", polarity: 0.4, value: 22}
-        ];*/
         return (
             <Pie
                 width={width}
@@ -109,7 +102,7 @@ export class InfoDrawer extends React.Component {
 
     renderChartSex() {
         let height = this.dwidth - 15 * 2, width = this.dwidth - 15 * 2;
-        const data = this.props.data.sex; //[{id: "female", polarity: 0.2, value: 324}, {id: "male", polarity: 0.6, value: 634}];
+        const data = this.props.data.sex;
         return (
             <Bar
                 width={width}
@@ -147,13 +140,13 @@ export class InfoDrawer extends React.Component {
     renderContent() {
         return (
             <div>
-                <Card style={cards_style}>
+                <Card style={{marginBottom: "10px", padding: "15px"}}>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Statistic title="Всего постов" value={this.props.data.display_count}/>
+                            <Statistic title="Всего постов" value={this.props.data.count}/>
                         </Col>
                         <Col span={12}>
-                            <Statistic title="Средняя тональность" value={this.props.data.polarity} precision={2}/>
+                            <Statistic title="Тональность" value={this.props.data.polarity} precision={2}/>
                         </Col>
                     </Row>
                 </Card>
@@ -173,7 +166,7 @@ export class InfoDrawer extends React.Component {
             <div>
                 <Drawer
                     width={this.dwidth + 20}
-                    title={`${this.props.data._id}`}
+                    title={`${this.props.data.name}`}
                     placement="left"
                     closable={true}
                     visible={this.props.open}

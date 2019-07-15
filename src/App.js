@@ -70,8 +70,8 @@ export default class App extends Component {
 
     getColor = (data) => {
         const map = this.getMap();
-        const MIN = Math.min.apply(null, data.filter((x) => x !== -1).map((x) => x.display_count));
-        const MAX = Math.max.apply(null, data.map((x) => x.display_count));
+        const MIN = Math.min.apply(null, data.filter((x) => x !== -1).map((x) => x.count));
+        const MAX = Math.max.apply(null, data.map((x) => x.count));
 
         this.state.mapSources.forEach((e) => {
             try {
@@ -89,7 +89,7 @@ export default class App extends Component {
         for (let i = 0; i < data.length; i++) {
             if (data[i] === -1) continue;
 
-            const color = hsvToHex({h: mapValue(data[i].display_count, MIN, MAX, -120, 0), s: 100, v: 100});
+            const color = hsvToHex({h: mapValue(data[i].count, MIN, MAX, -120, 0), s: 100, v: 100});
             const str = i.toString();
 
             const id1 = 'Polygon' + str,
@@ -120,7 +120,7 @@ export default class App extends Component {
     };
 
     refreshData = (dates) => {
-        axios.get('/api/clusters', {
+        axios.get('/api/clusters-sa', {
                 params: {
                     start: dates[0],
                     end: dates[1]
@@ -133,8 +133,8 @@ export default class App extends Component {
             Polygon.forEach((item) => {
                 let save = 0;
                 response.data.forEach((i) => {
-                    if (i._id === item.features[0].properties.name) {
-                        array.push({display_count: i.count, ...i});
+                    if (i.name === item.features[0].properties.name) {
+                        array.push(i);
                         save = 1;
                     }
                 });
