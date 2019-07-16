@@ -35,4 +35,8 @@ def clusters_endpoint_sa(request, format=None):
     q = request.GET
     if ('start' not in q.keys()) or ('end' not in q.keys()):
         return Response(status=400)
-    return Response(DB().aggregate_posts_sa(int(q['start']), int(q['end'])))
+    ar, sr = q.get('ar', None), q.get('sr', None)
+    return Response(DB().aggregate_posts_sa(int(q['start']),
+                                            int(q['end']),
+                                            list(map(int, ar)) if ar and ar != "" else ar,
+                                            list(map(int, sr)) if sr and sr != "" else sr))

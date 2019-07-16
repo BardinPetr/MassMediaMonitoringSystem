@@ -52,7 +52,11 @@ class DB:
                     .posts_collection
                     .aggregate(pipeline))
 
-    def aggregate_posts_sa(self, start, end):
+    def aggregate_posts_sa(self, start, end, age_request=None, sex_request=None):
+        if sex_request is None:
+            sex_request = [0, 1, 2, 3, 4, 5, 5]
+        if age_request is None:
+            age_request = [0, 1]
         pipeline = [
             {
                 '$match': {
@@ -96,11 +100,13 @@ class DB:
                     '$and': [
                         {
                             'sex': {
-                                '$exists': True
+                                '$exists': True,
+                                '$in': sex_request
                             }
                         }, {
                             'age': {
-                                '$exists': True
+                                '$exists': True,
+                                '$in': age_request
                             }
                         }
                     ]
@@ -222,4 +228,5 @@ class DB:
     def add_vk_user(self, element):
         return self.vk_users_collection.insert_one(element)
 
-# print(DB().aggregate_posts_sa(1562830000, 1662840000))
+
+# print(DB().aggregate_posts_sa(0, 1662840000))
