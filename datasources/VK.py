@@ -12,7 +12,6 @@ from analytics.FaceAnalyser import FaceAnalyser
 
 morph = pymorphy2.MorphAnalyzer()
 
-import vk
 
 class VK:
 
@@ -77,9 +76,8 @@ class VK:
                                                       [36, 50],
                                                       [50, inf]])).__next__()[0],
                              'sex': i['sex'] - 1,
-                             'user_id': i['id']}
-
-
+                             'user_id': i['id']
+                             }
             else:
                 try:
                     face_an = FaceAnalyser()
@@ -103,22 +101,23 @@ class VK:
 
                         sex = -1
 
-                    user_info = {'age': -1,
-                                 'sex': sex,
-                                 'user_id': i['id']
-                                 }
-
-                user_info = {'age': age_and_sex['age'],
-                             'sex': age_and_sex['sex'],
-                             'user_id': i['id']
-                             }
+                    user_info = {
+                        'age': -1,
+                        'sex': sex,
+                        'user_id': i['id']
+                    }
+                else:
+                    user_info = {
+                        'age': age_and_sex['age'],
+                        'sex': age_and_sex['sex'],
+                        'user_id': i['id']
+                    }
             try:
                 get_users.add_vk_user(user_info)
                 print("user with id:", i['id'], 'was added')
             except:
                 print('User already exist')
             users_info.append(user_info)
-            
 
-        #return users_info
+        # return users_info
         return ''

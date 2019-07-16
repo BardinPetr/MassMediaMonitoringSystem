@@ -27,7 +27,7 @@ class SentimentAnalyser:
         self.mode = nn
         if nn:
             try:
-                addr = path.join(os.getcwd().replace('analytics', ''), 'dist')
+                addr = path.join(os.getcwd().replace('analytics', '').replace('DB', ''), 'dist')
                 self.model = load_model(addr + '/model.hdf5', custom_objects=dependencies)
                 with open(addr + '/tokenizer.pickle', 'rb') as handle:
                     self.tokenizer = pickle.load(handle)
@@ -73,4 +73,4 @@ class SentimentAnalyser:
 
     def __get_polarity_nn(self, data):
         x = self.model.predict(self.__to_sequences(data if type(data) == list else [data]))
-        return x if type(data) == list else x[0]
+        return [i[0] for i in x] if type(data) == list else x[0][0]
