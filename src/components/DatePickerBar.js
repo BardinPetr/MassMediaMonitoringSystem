@@ -59,7 +59,7 @@ export class DatePickerBar extends React.Component {
                     <Button type="primary"
                             icon="search"
                             style={{marginLeft: "10px"}}
-                            onClick={() => this.props.onSearch(this.state.dates, this.state.sr, this.state.ar)}>
+                            onClick={() => this.props.onSearch({time: this.state.dates, sr: this.state.sr, ar: this.state.ar})}>
                         Search
                     </Button>
                 </div>

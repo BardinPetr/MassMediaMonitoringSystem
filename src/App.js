@@ -243,13 +243,13 @@ export default class App extends Component {
         this.setState({colorCity: array, dataResponse: array});
     };
 
-    refreshData = (dates, sr, ar) => {
+    refreshData = (dates) => {
         let Return = {
-            start: dates[0],
-            end: dates[1]
+            start: dates.time[0],
+            end: dates.time[1]
         };
-        if(sr !== '') Return = {...Return, sr: sr}
-        if(ar !== '') Return = {...Return, ar: ar}
+        if(dates.sr !== '') Return = {...Return, sr: dates.sr}
+        if(dates.ar !== '') Return = {...Return, ar: dates.ar}
         axios.get('/api/clusters-sa', {
                 params: Return
             }
