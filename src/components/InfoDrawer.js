@@ -165,7 +165,7 @@ export class InfoDrawer extends React.Component {
         return (
             <div>
                 <Drawer
-                    width={this.dwidth + 20}
+                    width={Math.min(350, Math.max(window.innerWidth, this.dwidth))}
                     title={`${this.props.data.name}`}
                     placement="left"
                     closable={true}
