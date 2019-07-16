@@ -5,6 +5,7 @@ from math import inf
 from os import path, getcwd
 
 import pymorphy2
+import vk
 
 from DB.DB import DB
 from analytics.FaceAnalyser import FaceAnalyser

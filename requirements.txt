@@ -1,5 +1,4 @@
 tweepy
-
 certifi==2018.8.24
 chardet==3.0.4
 defusedxml==0.5.0
@@ -32,3 +31,10 @@ google-cloud-language==1.2.0
 googleapis-common-protos==1.6.0
 grpcio
 yandex_geocoder
+tensorflow
+keras
+numpy
+pandas
+sklearn
+gensim
+wldhx.yadisk-direct
