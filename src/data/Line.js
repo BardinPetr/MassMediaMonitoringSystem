@@ -6005,4 +6005,4 @@ module.exports = [
             }
         ]
     }
-]
+];

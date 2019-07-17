@@ -1,16 +1,16 @@
+import datetime
 import json
-
+import time
 from math import inf
-
 from os import path, getcwd
-import time, datetime
-
-from analytics.FaceAnalyser import FaceAnalyser
-from DB.DB import DB
 
 import pymorphy2
-morph = pymorphy2.MorphAnalyzer()
+import vk
 
+from DB.DB import DB
+from analytics.FaceAnalyser import FaceAnalyser
+
+morph = pymorphy2.MorphAnalyzer()
 
 
 class VK:
@@ -30,7 +30,7 @@ class VK:
         newsfeed = []
         print('Start parsing')
         for i in range(5):
-            feed = self.vkapi.newsfeed.search(q=query, count=1, filters='post', v=5.12, offset=i * 200)
+            feed = self.vkapi.newsfeed.search(q=query, count=200, filters='post', v=5.12, offset=i * 200)
             for news in feed['items']:
                 newsfeed.append({'text': news['text'],
                                  'date': news['date'],
@@ -38,6 +38,7 @@ class VK:
                                  'owner_id': news['owner_id'],
                                  'id': news['id'],
                                  'polarity': -2})
+        print(len(newsfeed))
         return newsfeed
 
     def nickname2obj(self, nickname):
@@ -50,29 +51,33 @@ class VK:
 
         genders = {'femn': 0, 'masc': 1, 'neut': -1}
 
-        users_list = [i['owner_id'] for i in get_users.get_all_posts() if i['owner_id']>1]
+        a = get_users.get_all_posts()
+        print(len(a))
 
-        
-        list_info = self.vkapi.users.get(user_ids=users_list, v=5.101, fields = "sex, bdate, uid, photo_max_orig", lang="ru")
+        users_list = [i['owner_id'] for i in a if i['owner_id'] > 1]
+        print(len(users_list))
+
+        list_info = self.vkapi.users.get(user_ids=users_list, v=5.101, fields="sex, bdate, uid, photo_max_orig",
+                                         lang="ru")
 
         users_info = []
 
         for i in list_info:
 
-            if ('bdate' in i) and ('sex' in i) and (len(i['bdate']))>5:
+            if ('bdate' in i) and ('sex' in i) and (len(i['bdate'])) > 5:
                 print(i['bdate'])
-                f_per = int(time.mktime(datetime.datetime.strptime(i['bdate'].replace('.','/'), "%d/%m/%Y").timetuple()))
-                time_age = int((int(time.time())-f_per)/31536000)
+                f_per = int(
+                    time.mktime(datetime.datetime.strptime(i['bdate'].replace('.', '/'), "%d/%m/%Y").timetuple()))
+                time_age = int((int(time.time()) - f_per) / 31536000)
                 user_info = {'age': filter(lambda x: x[1][0] <= time_age <= x[1][1],
-                              enumerate([[0, 14],
-                                         [15, 21],
-                                         [22, 35],
-                                         [36, 50],
-                                         [50, inf]])).__next__()[0],
-                            'sex' : i['sex']-1,
-                            'user_id': i['id']}
-                
-            
+                                           enumerate([[0, 14],
+                                                      [15, 21],
+                                                      [22, 35],
+                                                      [36, 50],
+                                                      [50, inf]])).__next__()[0],
+                             'sex': i['sex'] - 1,
+                             'user_id': i['id']
+                             }
             else:
                 try:
                     face_an = FaceAnalyser()
@@ -84,8 +89,8 @@ class VK:
 
                 if age_and_sex['sex'] == -1 and age_and_sex['age'] == -1:
 
-                    #print(i['first_name'])
-                    #print(type(i['first_name']))
+                    # print(i['first_name'])
+                    # print(type(i['first_name']))
                     print(i['first_name'])
 
                     if morph.parse(i['first_name'])[0].tag.gender is not None:
@@ -96,23 +101,23 @@ class VK:
 
                         sex = -1
 
-                    user_info = {'age': -1,
-                                'sex' : sex,
-                                'user_id': i['id']
+                    user_info = {
+                        'age': -1,
+                        'sex': sex,
+                        'user_id': i['id']
                     }
-                
-                user_info = {'age': age_and_sex['age'],
-                            'sex' : age_and_sex['sex'],
-                            'user_id' : i['id'] 
-                }
-
-            get_users.add_vk_user(user_info)
+                else:
+                    user_info = {
+                        'age': age_and_sex['age'],
+                        'sex': age_and_sex['sex'],
+                        'user_id': i['id']
+                    }
+            try:
+                get_users.add_vk_user(user_info)
+                print("user with id:", i['id'], 'was added')
+            except:
+                print('User already exist')
             users_info.append(user_info)
-            print ("user with id:", i['id'], 'was added')
 
-
-
-
-
-        return users_info
-
+        # return users_info
+        return ''
