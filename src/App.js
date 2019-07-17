@@ -2,7 +2,7 @@ import AutoSizer from 'react-virtualized/dist/es/AutoSizer';
 import React, {Component} from 'react';
 import Polygon from './data/Polygon';
 import {hsvToHex} from "colorsys";
-import MapGL from 'react-map-gl';
+import MapGL, {FlyToInterpolator}  from 'react-map-gl';
 import Line from './data/Line';
 import 'antd/dist/antd.css';
 import axios from 'axios';
@@ -12,6 +12,7 @@ import {LegendBar} from "./components/LegendBar"
 import {InfoDrawer} from "./components/InfoDrawer";
 import {getGeoCenter} from "./utils/GeoUtils";
 import {mapValue} from "./utils/CalcUtils";
+import {ControlPanel} from "./components/ControlPanel"
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiZ29sZGZvcjEiLCJhIjoiY2p4c3BzeThxMGpzejNtbzF5YmgxM2ttOSJ9.f2knfkaI5bt5avgiS5qDlw'; // eslint-disable-line
 
@@ -73,11 +74,22 @@ export default class App extends Component {
     };
 
     _onViewportChange = (viewport) => {
+        //console.log(viewport)
         this.setState({viewport});
         if (this.state.loaded === 1) {
             this.inMap();
         }
     };
+
+    _goToViewport = ({longitude, latitude, zoom}) => {
+        this._onViewportChange({
+            latitude,
+            longitude,
+            zoom,
+            transitionInterpolator: new FlyToInterpolator(),
+            transitionDuration: 3000
+        });
+      }
 
     inMap = () => {
         let coord = this.getMap().getBounds();
@@ -106,8 +118,8 @@ export default class App extends Component {
         data.forEach((item, i) => {
             if (item !== -1 && this.state.dataResponse[i] !== -1){ 
                 array.push(this.state.dataResponse[i]); 
-                if(this.state.dataResponse[i].count > MAX) MAX = this.state.dataResponse[i].count;
-                if(this.state.dataResponse[i].count < MIN) MIN = this.state.dataResponse[i].count;
+                if(this.state.dataResponse[i].polarity > MAX) MAX = this.state.dataResponse[i].polarity;
+                if(this.state.dataResponse[i].polarity < MIN) MIN = this.state.dataResponse[i].polarity;
             }
             else array.push(-1);
         });
@@ -116,7 +128,7 @@ export default class App extends Component {
 
         let col = [];
         let delt = (MAX - MIN) / 5;
-        for (let i = 0; i < 6; i++) col.push(Math.round(MIN + (delt * i)));
+        for (let i = 0; i < 6; i++) col.push((MIN + (delt * i)).toFixed(1));
 
         let rt = 0;
 
@@ -128,7 +140,7 @@ export default class App extends Component {
             let color = -1;
             if (MIN !== Infinity) {
                 if (array[i] !== -1) {
-                    color = hsvToHex({h: mapValue(array[i].count, MIN, MAX, -120, 0), s: 100, v: 100});
+                    color = hsvToHex({h: mapValue(array[i].polarity, MIN, MAX, -120, 0), s: 100, v: 100});
                     if (MIN === MAX) {
                         color = this.state.colorCity[i];
                         if(this.state.colorCity[i] === -1) color = '#0000ff';
@@ -255,7 +267,7 @@ export default class App extends Component {
             }
         ).then((response) => {
             let array = [];
-            console.log('Data response: ', response.data);
+            console.log('Data response: ', JSON.parse(JSON.stringify(response.data)));
             for(let y = 0; y < Polygon.length; y++){
                 for(let i = 0; i < response.data.length; i++){
                     if (response.data[i].name === Polygon[y].features[0].properties.name) {
@@ -264,7 +276,10 @@ export default class App extends Component {
                         break;
                     }
                 }
-                if(y === array.length) array.push(-1);
+                if(y === array.length){
+                    array.push(-1);
+                    console.log(Polygon[y].features[0].properties.name);
+                }
             }
             this.getData(array);
         }).catch((error) => console.log('Data response error: ', error));
@@ -292,9 +307,11 @@ export default class App extends Component {
                             onClick={this.onMapClick}
                         >
                             {this.state.points.map(this.renderCityMarker)}
-                        </MapGL>)}
+                        </MapGL>
+                        )}
                 </AutoSizer>
-                <DatePickerBar onSearch={(x) => this.refreshData(x)}/>
+                    <DatePickerBar onSearch={(x) => this.refreshData(x)}/>
+                    <ControlPanel onChange={(x) => this._goToViewport(x)}/>
                 <LegendBar dataArray={this.state.dataArray}/>
                 <InfoDrawer data={this.state.drawerData}
                             open={this.state.drawerVisibility}

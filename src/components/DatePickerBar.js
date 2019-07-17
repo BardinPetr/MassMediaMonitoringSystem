@@ -21,13 +21,13 @@ export class DatePickerBar extends React.Component {
     render() {
         const DivStyle = {
             margin: '0px 0px 0px 0px',
-            position: 'absolute',
+            position: "sticky",
             zIndex: 1000,
             right: '12px',
             top: '14px',
             width: '300px',
-            float: 'right',
-            textAlign: 'right'
+            textAlign: 'right',
+            float: 'right'
         };
         const DivDivStyle = {
             margin: '10px 0px 0px 0px',
@@ -55,7 +55,7 @@ export class DatePickerBar extends React.Component {
                     style={{width: 300}}
                     func={e => this.setState({ar: e})}>Выберите возрастный группы</CheckBox>
                 </div>
-                <div style={DivDivStyle}>
+                <div style={{margin: '10px 0px 10px 0px'}}>
                     <Button type="primary"
                             icon="search"
                             style={{marginLeft: "10px"}}

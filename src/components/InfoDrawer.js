@@ -14,7 +14,7 @@ const cards_style = {
 };
 
 export class InfoDrawer extends React.Component {
-    dwidth = 330;
+    dwidth = (window.innerWidth < window.innerHeight) ? window.innerWidth - 20 : 320;
 
     renderPieSex = () => {
         let height = this.dwidth - 15 * 2, width = this.dwidth - 15 * 2;
@@ -102,7 +102,10 @@ export class InfoDrawer extends React.Component {
 
     renderChartSex() {
         let height = this.dwidth - 15 * 2, width = this.dwidth - 15 * 2;
-        const data = this.props.data.sex;
+        var data = this.props.data.sex;
+        data.map(x => 
+            x.polarity = parseFloat(x.polarity.toFixed(3)));
+        console.log(data);
         return (
             <Bar
                 width={width}
@@ -146,7 +149,7 @@ export class InfoDrawer extends React.Component {
                             <Statistic title="Всего постов" value={this.props.data.count}/>
                         </Col>
                         <Col span={12}>
-                            <Statistic title="Тональность" value={this.props.data.polarity} precision={2}/>
+                            <Statistic title="Тональность" value={this.props.data.polarity.toFixed(2)} precision={2}/>
                         </Col>
                     </Row>
                 </Card>
@@ -162,6 +165,7 @@ export class InfoDrawer extends React.Component {
     }
 
     render() {
+        console.log(window.innerWidth < window.innerHeight)
         return (
             <div>
                 <Drawer
