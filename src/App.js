@@ -215,7 +215,7 @@ export default class App extends Component {
                                                     data={data}/>;
 
     handleMapLoaded = () => {
-        this.refreshData([0, 10000000000]);
+        this.refreshData({time: [0, 10000000000]});
         this.setState({loaded: 1});
         let array = [];
         Polygon.forEach((item, i) => {
