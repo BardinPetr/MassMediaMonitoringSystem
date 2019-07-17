@@ -105,7 +105,7 @@ export class InfoDrawer extends React.Component {
         var data = this.props.data.sex;
         data.map(x => 
             x.polarity = parseFloat(x.polarity.toFixed(3)));
-        console.log(data);
+        //console.log(data);
         return (
             <Bar
                 width={width}
@@ -165,7 +165,7 @@ export class InfoDrawer extends React.Component {
     }
 
     render() {
-        console.log(window.innerWidth < window.innerHeight)
+        //console.log(window.innerWidth < window.innerHeight)
         return (
             <div>
                 <Drawer
