@@ -73,4 +73,4 @@ class SentimentAnalyser:
 
     def __get_polarity_nn(self, data):
         x = self.model.predict(self.__to_sequences(data if type(data) == list else [data]))
-        return [i[0] for i in x] if type(data) == list else x[0][0]
+        return [i[0] for i in x] if type(data) == list else float(x[0][0])
