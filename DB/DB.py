@@ -60,25 +60,23 @@ class DB:
         if sex_request is None:
             sex_request = [0, 1, 2, 3, 4, 5, 5]
         if age_request is None:
-            age_request = [0, 1]
+            age_request = [0, 1, 2]
+
         pipeline = [
             {
                 '$match': {
                     '$and': [
-                        {
-                            'date': {
-                                '$gte': start
-                            }
-                        }, {
-                            'date': {
-                                '$lte': end
-                            }
-                        }, {
-                            'owner_id': {
-                                '$gt': 0
-                            }
-                        }
-                    ]
+                                {
+                                    'date': {
+                                        '$gte': start
+                                    }
+                                },
+                                {
+                                    'date': {
+                                        '$lte': end
+                                    }
+                                }
+                            ] + ([] if 2 in age_request else [{'owner_id': {'$gt': 0}}])
                 }
             }, {
                 '$lookup': {
@@ -103,15 +101,29 @@ class DB:
                 '$match': {
                     '$and': [
                         {
-                            'sex': {
-                                '$exists': True,
-                                '$in': sex_request
-                            }
+                            '$or': [
+                                {
+                                    'sex': {
+                                        '$exists': False
+                                    }
+                                }, {
+                                    'sex': {
+                                        '$in': sex_request + [-1]
+                                    }
+                                }
+                            ]
                         }, {
-                            'age': {
-                                '$exists': True,
-                                '$in': age_request
-                            }
+                            '$or': [
+                                {
+                                    'age': {
+                                        '$exists': False
+                                    }
+                                }, {
+                                    'age': {
+                                        '$in': age_request + [-1]
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
@@ -129,8 +141,7 @@ class DB:
                         '$avg': '$polarity'
                     }
                 }
-            },
-            {
+            }, {
                 '$replaceRoot': {
                     'newRoot': {
                         '$mergeObjects': [
@@ -152,28 +163,23 @@ class DB:
                 }
             },
         ]
-
         pre = self.posts_collection.aggregate(pipeline)
         res = []
         for i in pre:
             base = reduce(lambda x, y: [x[0] + y['count'], x[1] + y['polarity']], i['list'], [0, 0])
             base[1] /= len(i['list'])
-            slist, alist = [{'id': 'Женщины',
-                             'polarity': 0,
-                             'value': 0},
-                            {'id': 'Мужчины',
-                             'polarity': 0,
-                             'value': 0}], \
-                           [{'id': '0-14 лет', 'polarity': 0, 'value': 0},
-                            {'id': '15-21 лет', 'polarity': 0, 'value': 0},
-                            {'id': '22-35 лет', 'polarity': 0, 'value': 0},
-                            {'id': '36-50 лет', 'polarity': 0, 'value': 0},
-                            {'id': '50-inf лет', 'polarity': 0, 'value': 0}]
+            slist = [{'id': 'Женщины', 'polarity': 0, 'value': 0},
+                     {'id': 'Мужчины', 'polarity': 0, 'value': 0}]
+            alist = [{'id': '0-14 лет', 'polarity': 0, 'value': 0},
+                     {'id': '15-21 лет', 'polarity': 0, 'value': 0},
+                     {'id': '22-35 лет', 'polarity': 0, 'value': 0},
+                     {'id': '36-50 лет', 'polarity': 0, 'value': 0},
+                     {'id': '50-inf лет', 'polarity': 0, 'value': 0}]
 
             scnt = [0, 0]
             acnt = [0, 0, 0, 0, 0]
             for j in i['list']:
-                if j['sex'] != -1 and j['age'] != -1:
+                if 'sex' in j.keys() and j['sex'] != -1 and j['age'] != -1:
                     slist[j['sex']]['value'] += j['count']
                     slist[j['sex']]['polarity'] += j['polarity']
                     alist[j['age']]['value'] += j['count']
@@ -195,45 +201,57 @@ class DB:
 
         return res
 
-    def add_news(self, mylist):
-        return self.news_collection.insert_many(mylist).inserted_ids
 
-    def get_news(self):
-        return list(self.news_collection.find())
+def add_news(self, mylist):
+    return self.news_collection.insert_many(mylist).inserted_ids
 
-    def add_comments(self, mylist):
-        return self.comments_collection.insert_many(mylist).inserted_ids
 
-    def get_comments(self):
-        return list(self.comments_collection.find())
+def get_news(self):
+    return list(self.news_collection.find())
 
-    def add_cache(self, query, data):
-        res = {'query': query, 'result': data}
-        return self.cache_collection.insert_one(res)
 
-    def get_ya_news_by_cache(self, query):
-        return list(self.news_collection.find({'query': query}))
+def add_comments(self, mylist):
+    return self.comments_collection.insert_many(mylist).inserted_ids
 
-    def get_vk_posts_by_cache(self, query):
-        return list(self.posts_collection.find({'query': query}))
 
-    def get_cache(self, query):
-        return self.cache_collection.find_one({'query': query})
+def get_comments(self):
+    return list(self.comments_collection.find())
 
-    def add_twits(self, mylist):
-        return self.twits_collection.insert_many(mylist).inserted_ids
 
-    def add_vk_users(self, mylist):
-        try:
-            return self.vk_users_collection.insert_many(mylist).inserted_ids
-        except:
-            print('nonooo')
+def add_cache(self, query, data):
+    res = {'query': query, 'result': data}
+    return self.cache_collection.insert_one(res)
 
-    def add_vk_user(self, element):
-        return self.vk_users_collection.insert_one(element)
 
-    def update_post(self, id, res):
-        self.posts_collection.update_one({'_id': id}, {'$set': res})
+def get_ya_news_by_cache(self, query):
+    return list(self.news_collection.find({'query': query}))
+
+
+def get_vk_posts_by_cache(self, query):
+    return list(self.posts_collection.find({'query': query}))
+
+
+def get_cache(self, query):
+    return self.cache_collection.find_one({'query': query})
+
+
+def add_twits(self, mylist):
+    return self.twits_collection.insert_many(mylist).inserted_ids
+
+
+def add_vk_users(self, mylist):
+    try:
+        return self.vk_users_collection.insert_many(mylist).inserted_ids
+    except:
+        print('nonooo')
+
+
+def add_vk_user(self, element):
+    return self.vk_users_collection.insert_one(element)
+
+
+def update_post(self, id, res):
+    self.posts_collection.update_one({'_id': id}, {'$set': res})
 
 
 def process_sentiment():

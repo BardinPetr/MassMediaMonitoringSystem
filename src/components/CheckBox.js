@@ -1,8 +1,7 @@
 import React from 'react';
-import { Select } from 'antd';
-import { array } from 'prop-types';
-const { Option } = Select;
+import {Select} from 'antd';
 
+const {Option} = Select;
 
 
 const Style = {
@@ -14,12 +13,12 @@ const Style = {
 
 export class CheckBox extends React.Component {
 
-    getChildren = (array) =>{
+    getChildren = (array) => {
         let ar = [];
         array.forEach(item => ar.push(<Option key={item}>{item}</Option>));
         return ar;
 
-    }
+    };
 
     render() {
         const {dataArray, style, func, children} = this.props;
@@ -32,10 +31,12 @@ export class CheckBox extends React.Component {
                 defaultValue={[]}
                 onChange={(value) => {
                     let Return = '';
-                    value.forEach(item => {Return = Return + dataArray.indexOf(item)});
+                    value.forEach(item => {
+                        Return = Return + dataArray.indexOf(item)
+                    });
                     func(Return);
                 }}
-                >
+            >
                 {this.getChildren(dataArray)}
             </Select>
         )

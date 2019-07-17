@@ -104,12 +104,11 @@ export default class App extends Component {
         let MAX = -Infinity;
 
         data.forEach((item, i) => {
-            if (item !== -1 && this.state.dataResponse[i] !== -1){ 
-                array.push(this.state.dataResponse[i]); 
-                if(this.state.dataResponse[i].count > MAX) MAX = this.state.dataResponse[i].count;
-                if(this.state.dataResponse[i].count < MIN) MIN = this.state.dataResponse[i].count;
-            }
-            else array.push(-1);
+            if (item !== -1 && this.state.dataResponse[i] !== -1) {
+                array.push(this.state.dataResponse[i]);
+                if (this.state.dataResponse[i].count > MAX) MAX = this.state.dataResponse[i].count;
+                if (this.state.dataResponse[i].count < MIN) MIN = this.state.dataResponse[i].count;
+            } else array.push(-1);
         });
 
         const map = this.getMap();
@@ -131,7 +130,7 @@ export default class App extends Component {
                     color = hsvToHex({h: mapValue(array[i].count, MIN, MAX, -120, 0), s: 100, v: 100});
                     if (MIN === MAX) {
                         color = this.state.colorCity[i];
-                        if(this.state.colorCity[i] === -1) color = '#0000ff';
+                        if (this.state.colorCity[i] === -1) color = '#0000ff';
                     }
                 }
             }
@@ -169,12 +168,12 @@ export default class App extends Component {
     };
 
     getData = (data) => {
-        const map = this.getMap()
+        const map = this.getMap();
         console.log(data);
         this.state.mapSources.forEach((e) => {
             try {
-                if(map.getLayer(e)) map.removeLayer(e);
-                if(map.getSource(e)) map.removeSource(e);
+                if (map.getLayer(e)) map.removeLayer(e);
+                if (map.getSource(e)) map.removeSource(e);
             } catch {
             }
         });
@@ -226,10 +225,10 @@ export default class App extends Component {
                 lat_MIN = Infinity;
 
             item.features[0].geometry.coordinates[0].forEach((item) => {
-                if(item[0] > lng_MAX)lng_MAX = item[0];
-                if(item[0] < lng_MIN)lng_MIN = item[0];
-                if(item[1] > lat_MAX)lat_MAX = item[1];
-                if(item[1] < lat_MIN)lat_MIN = item[1];
+                if (item[0] > lng_MAX) lng_MAX = item[0];
+                if (item[0] < lng_MIN) lng_MIN = item[0];
+                if (item[1] > lat_MAX) lat_MAX = item[1];
+                if (item[1] < lat_MIN) lat_MIN = item[1];
             });
 
             let array1 = this.state.boarderCity;
@@ -248,23 +247,23 @@ export default class App extends Component {
             start: dates.time[0],
             end: dates.time[1]
         };
-        if(dates.sr !== '') Return = {...Return, sr: dates.sr}
-        if(dates.ar !== '') Return = {...Return, ar: dates.ar}
+        if (dates.sr !== '') Return = {...Return, sr: dates.sr};
+        if (dates.ar !== '') Return = {...Return, ar: dates.ar};
         axios.get('/api/clusters-sa', {
                 params: Return
             }
         ).then((response) => {
             let array = [];
             console.log('Data response: ', response.data);
-            for(let y = 0; y < Polygon.length; y++){
-                for(let i = 0; i < response.data.length; i++){
+            for (let y = 0; y < Polygon.length; y++) {
+                for (let i = 0; i < response.data.length; i++) {
                     if (response.data[i].name === Polygon[y].features[0].properties.name) {
                         array.push({...response.data[i]});
                         response.data.splice(i, 1);
                         break;
                     }
                 }
-                if(y === array.length) array.push(-1);
+                if (y === array.length) array.push(-1);
             }
             this.getData(array);
         }).catch((error) => console.log('Data response error: ', error));
