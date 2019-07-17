@@ -2,7 +2,7 @@ import AutoSizer from 'react-virtualized/dist/es/AutoSizer';
 import React, {Component} from 'react';
 import Polygon from './data/Polygon';
 import {hsvToHex} from "colorsys";
-import MapGL, {FlyToInterpolator}  from 'react-map-gl';
+import MapGL, {FlyToInterpolator} from 'react-map-gl';
 import Line from './data/Line';
 import 'antd/dist/antd.css';
 import axios from 'axios';
@@ -13,6 +13,7 @@ import {InfoDrawer} from "./components/InfoDrawer";
 import {getGeoCenter} from "./utils/GeoUtils";
 import {mapValue} from "./utils/CalcUtils";
 import {ControlPanel} from "./components/ControlPanel"
+import {message} from 'antd';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiZ29sZGZvcjEiLCJhIjoiY2p4c3BzeThxMGpzejNtbzF5YmgxM2ttOSJ9.f2knfkaI5bt5avgiS5qDlw'; // eslint-disable-line
 
@@ -89,7 +90,7 @@ export default class App extends Component {
             transitionInterpolator: new FlyToInterpolator(),
             transitionDuration: 3000
         });
-      }
+    };
 
     inMap = () => {
         let coord = this.getMap().getBounds();
@@ -116,12 +117,11 @@ export default class App extends Component {
         let MAX = -Infinity;
 
         data.forEach((item, i) => {
-            if (item !== -1 && this.state.dataResponse[i] !== -1){ 
-                array.push(this.state.dataResponse[i]); 
-                if(this.state.dataResponse[i].polarity > MAX) MAX = this.state.dataResponse[i].polarity;
-                if(this.state.dataResponse[i].polarity < MIN) MIN = this.state.dataResponse[i].polarity;
-            }
-            else array.push(-1);
+            if (item !== -1 && this.state.dataResponse[i] !== -1) {
+                array.push(this.state.dataResponse[i]);
+                if (this.state.dataResponse[i].polarity > MAX) MAX = this.state.dataResponse[i].polarity;
+                if (this.state.dataResponse[i].polarity < MIN) MIN = this.state.dataResponse[i].polarity;
+            } else array.push(-1);
         });
 
         const map = this.getMap();
@@ -255,6 +255,19 @@ export default class App extends Component {
         this.setState({colorCity: array, dataResponse: array});
     };
 
+    openLoading = () => {
+        let msg = message.loading('Загрузка данных', 0);
+        this.setState({loadingMsg: msg});
+    };
+
+    closeLoading = (error) => {
+        if (this.state.loadingMsg) {
+            this.state.loadingMsg();
+            if (!error) message.success('Загрузкка успешно завершена', 5);
+            else message.error('Ошибка загрузки данных', 5);
+        }
+    };
+
     refreshData = (dates) => {
         let Return = {
             start: dates.time[0],
@@ -262,27 +275,33 @@ export default class App extends Component {
         };
         if (dates.sr !== '') Return = {...Return, sr: dates.sr};
         if (dates.ar !== '') Return = {...Return, ar: dates.ar};
+
+        this.openLoading();
         axios.get('/api/clusters-sa', {
                 params: Return
             }
         ).then((response) => {
             let array = [];
             console.log('Data response: ', JSON.parse(JSON.stringify(response.data)));
-            for(let y = 0; y < Polygon.length; y++){
-                for(let i = 0; i < response.data.length; i++){
+            for (let y = 0; y < Polygon.length; y++) {
+                for (let i = 0; i < response.data.length; i++) {
                     if (response.data[i].name === Polygon[y].features[0].properties.name) {
                         array.push({...response.data[i]});
                         response.data.splice(i, 1);
                         break;
                     }
                 }
-                if(y === array.length){
+                if (y === array.length) {
                     array.push(-1);
                     console.log(Polygon[y].features[0].properties.name);
                 }
             }
+            this.closeLoading(false);
             this.getData(array);
-        }).catch((error) => console.log('Data response error: ', error));
+        }).catch((error) => {
+            console.log('Data response error: ', error);
+            this.closeLoading(true);
+        });
     };
 
     onMapClick = (e) => {
@@ -308,10 +327,10 @@ export default class App extends Component {
                         >
                             {this.state.points.map(this.renderCityMarker)}
                         </MapGL>
-                        )}
+                    )}
                 </AutoSizer>
-                    <DatePickerBar onSearch={(x) => this.refreshData(x)}/>
-                    <ControlPanel onChange={(x) => this._goToViewport(x)}/>
+                <DatePickerBar onSearch={(x) => this.refreshData(x)}/>
+                <ControlPanel onChange={(x) => this._goToViewport(x)}/>
                 <LegendBar dataArray={this.state.dataArray}/>
                 <InfoDrawer data={this.state.drawerData}
                             open={this.state.drawerVisibility}
