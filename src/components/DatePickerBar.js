@@ -1,8 +1,8 @@
 import React from 'react';
 import {Button, DatePicker} from 'antd';
+import {CheckBox} from "./CheckBox"
 
 const {RangePicker} = DatePicker;
-import {CheckBox} from "./CheckBox"
 
 const moment = require('moment');
 
@@ -10,20 +10,20 @@ const moment = require('moment');
 export class DatePickerBar extends React.Component {
 
     componentDidMount() {
-        this.setState({dates: [moment(), moment()].map((v) => v.unix())})
+        this.setState({dates: [moment(), moment()].map((v) => v.unix())});
         this.setState({sr: '', ar: ''})
     }
 
     render() {
         const DivStyle = {
             margin: '0px 0px 0px 0px',
-            position: 'absolute',
+            position: "sticky",
             zIndex: 1000,
             right: '12px',
             top: '14px',
             width: '300px',
-            float: 'right',
-            textAlign: 'right'
+            textAlign: 'right',
+            float: 'right'
         };
         const DivDivStyle = {
             margin: '10px 0px 0px 0px',
@@ -43,19 +43,23 @@ export class DatePickerBar extends React.Component {
                 </div>
                 <div style={DivDivStyle}>
                     <CheckBox dataArray={['Женщины', 'Мужчины', 'Группы']}
-                        style={{width: 300}}
-                        func={e => this.setState({sr: e})}>Выберите половые группы</CheckBox>
+                              style={{width: 300}}
+                              func={e => this.setState({sr: e})}>Выберите половые группы</CheckBox>
                 </div>
                 <div style={DivDivStyle}>
                     <CheckBox dataArray={['0-14', '15-21', '22-35', '36-50', '51+']}
-                    style={{width: 300}}
-                    func={e => this.setState({ar: e})}>Выберите возрастный группы</CheckBox>
+                              style={{width: 300}}
+                              func={e => this.setState({ar: e})}>Выберите возрастный группы</CheckBox>
                 </div>
-                <div style={DivDivStyle}>
+                <div style={{margin: '10px 0px 10px 0px'}}>
                     <Button type="primary"
                             icon="search"
                             style={{marginLeft: "10px"}}
-                            onClick={() => this.props.onSearch({time: this.state.dates, sr: this.state.sr, ar: this.state.ar})}>
+                            onClick={() => this.props.onSearch({
+                                time: this.state.dates,
+                                sr: this.state.sr,
+                                ar: this.state.ar
+                            })}>
                         Search
                     </Button>
                 </div>

@@ -38,7 +38,15 @@ module.exports = {
                         loader: "less-loader"
                     }
                 ]
-            }
+            },
+            {
+                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+                loader: '@svgr/webpack',
+                options: {
+                  babel: true,
+                  icon: true,
+                },
+            },
         ]
     },
     plugins: [

@@ -2,7 +2,7 @@ import AutoSizer from 'react-virtualized/dist/es/AutoSizer';
 import React, {Component} from 'react';
 import Polygon from './data/Polygon';
 import {hsvToHex} from "colorsys";
-import MapGL from 'react-map-gl';
+import MapGL, {FlyToInterpolator} from 'react-map-gl';
 import Line from './data/Line';
 import 'antd/dist/antd.css';
 import axios from 'axios';
@@ -12,6 +12,8 @@ import {LegendBar} from "./components/LegendBar"
 import {InfoDrawer} from "./components/InfoDrawer";
 import {getGeoCenter} from "./utils/GeoUtils";
 import {mapValue} from "./utils/CalcUtils";
+import {ControlPanel} from "./components/ControlPanel"
+import {message} from 'antd';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiZ29sZGZvcjEiLCJhIjoiY2p4c3BzeThxMGpzejNtbzF5YmgxM2ttOSJ9.f2knfkaI5bt5avgiS5qDlw'; // eslint-disable-line
 
@@ -73,10 +75,21 @@ export default class App extends Component {
     };
 
     _onViewportChange = (viewport) => {
+        //console.log(viewport)
         this.setState({viewport});
         if (this.state.loaded === 1) {
             this.inMap();
         }
+    };
+
+    _goToViewport = ({longitude, latitude, zoom}) => {
+        this._onViewportChange({
+            latitude,
+            longitude,
+            zoom,
+            transitionInterpolator: new FlyToInterpolator(),
+            transitionDuration: 3000
+        });
     };
 
     inMap = () => {
@@ -104,19 +117,18 @@ export default class App extends Component {
         let MAX = -Infinity;
 
         data.forEach((item, i) => {
-            if (item !== -1 && this.state.dataResponse[i] !== -1){ 
-                array.push(this.state.dataResponse[i]); 
-                if(this.state.dataResponse[i].count > MAX) MAX = this.state.dataResponse[i].count;
-                if(this.state.dataResponse[i].count < MIN) MIN = this.state.dataResponse[i].count;
-            }
-            else array.push(-1);
+            if (item !== -1 && this.state.dataResponse[i] !== -1) {
+                array.push(this.state.dataResponse[i]);
+                if (this.state.dataResponse[i].polarity > MAX) MAX = this.state.dataResponse[i].polarity;
+                if (this.state.dataResponse[i].polarity < MIN) MIN = this.state.dataResponse[i].polarity;
+            } else array.push(-1);
         });
 
         const map = this.getMap();
 
         let col = [];
         let delt = (MAX - MIN) / 5;
-        for (let i = 0; i < 6; i++) col.push(Math.round(MIN + (delt * i)));
+        for (let i = 0; i < 6; i++) col.push((MIN + (delt * i)).toFixed(1));
 
         let rt = 0;
 
@@ -128,10 +140,10 @@ export default class App extends Component {
             let color = -1;
             if (MIN !== Infinity) {
                 if (array[i] !== -1) {
-                    color = hsvToHex({h: mapValue(array[i].count, MIN, MAX, -120, 0), s: 100, v: 100});
+                    color = hsvToHex({h: mapValue(array[i].polarity, MIN, MAX, -120, 0), s: 100, v: 100});
                     if (MIN === MAX) {
                         color = this.state.colorCity[i];
-                        if(this.state.colorCity[i] === -1) color = '#0000ff';
+                        if (this.state.colorCity[i] === -1) color = '#0000ff';
                     }
                 }
             }
@@ -169,12 +181,12 @@ export default class App extends Component {
     };
 
     getData = (data) => {
-        const map = this.getMap()
+        const map = this.getMap();
         console.log(data);
         this.state.mapSources.forEach((e) => {
             try {
-                if(map.getLayer(e)) map.removeLayer(e);
-                if(map.getSource(e)) map.removeSource(e);
+                if (map.getLayer(e)) map.removeLayer(e);
+                if (map.getSource(e)) map.removeSource(e);
             } catch {
             }
         });
@@ -216,7 +228,7 @@ export default class App extends Component {
                                                     data={data}/>;
 
     handleMapLoaded = () => {
-        this.refreshData([0, 10000000000]);
+        this.refreshData({time: [0, 10000000000]});
         this.setState({loaded: 1});
         let array = [];
         Polygon.forEach((item, i) => {
@@ -226,10 +238,10 @@ export default class App extends Component {
                 lat_MIN = Infinity;
 
             item.features[0].geometry.coordinates[0].forEach((item) => {
-                if(item[0] > lng_MAX)lng_MAX = item[0];
-                if(item[0] < lng_MIN)lng_MIN = item[0];
-                if(item[1] > lat_MAX)lat_MAX = item[1];
-                if(item[1] < lat_MIN)lat_MIN = item[1];
+                if (item[0] > lng_MAX) lng_MAX = item[0];
+                if (item[0] < lng_MIN) lng_MIN = item[0];
+                if (item[1] > lat_MAX) lat_MAX = item[1];
+                if (item[1] < lat_MIN) lat_MIN = item[1];
             });
 
             let array1 = this.state.boarderCity;
@@ -243,31 +255,53 @@ export default class App extends Component {
         this.setState({colorCity: array, dataResponse: array});
     };
 
+    openLoading = () => {
+        let msg = message.loading('Загрузка данных', 0);
+        this.setState({loadingMsg: msg});
+    };
+
+    closeLoading = (error) => {
+        if (this.state.loadingMsg) {
+            this.state.loadingMsg();
+            if (!error) message.success('Загрузкка успешно завершена', 5);
+            else message.error('Ошибка загрузки данных', 5);
+        }
+    };
+
     refreshData = (dates) => {
         let Return = {
             start: dates.time[0],
             end: dates.time[1]
         };
-        if(dates.sr !== '') Return = {...Return, sr: dates.sr}
-        if(dates.ar !== '') Return = {...Return, ar: dates.ar}
+        if (dates.sr !== '') Return = {...Return, sr: dates.sr};
+        if (dates.ar !== '') Return = {...Return, ar: dates.ar};
+
+        this.openLoading();
         axios.get('/api/clusters-sa', {
                 params: Return
             }
         ).then((response) => {
             let array = [];
-            console.log('Data response: ', response.data);
-            for(let y = 0; y < Polygon.length; y++){
-                for(let i = 0; i < response.data.length; i++){
+            console.log('Data response: ', JSON.parse(JSON.stringify(response.data)));
+            for (let y = 0; y < Polygon.length; y++) {
+                for (let i = 0; i < response.data.length; i++) {
                     if (response.data[i].name === Polygon[y].features[0].properties.name) {
                         array.push({...response.data[i]});
                         response.data.splice(i, 1);
                         break;
                     }
                 }
-                if(y === array.length) array.push(-1);
+                if (y === array.length) {
+                    array.push(-1);
+                    console.log(Polygon[y].features[0].properties.name);
+                }
             }
+            this.closeLoading(false);
             this.getData(array);
-        }).catch((error) => console.log('Data response error: ', error));
+        }).catch((error) => {
+            console.log('Data response error: ', error);
+            this.closeLoading(true);
+        });
     };
 
     onMapClick = (e) => {
@@ -292,9 +326,11 @@ export default class App extends Component {
                             onClick={this.onMapClick}
                         >
                             {this.state.points.map(this.renderCityMarker)}
-                        </MapGL>)}
+                        </MapGL>
+                    )}
                 </AutoSizer>
                 <DatePickerBar onSearch={(x) => this.refreshData(x)}/>
+                <ControlPanel onChange={(x) => this._goToViewport(x)}/>
                 <LegendBar dataArray={this.state.dataArray}/>
                 <InfoDrawer data={this.state.drawerData}
                             open={this.state.drawerVisibility}

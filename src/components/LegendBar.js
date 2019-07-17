@@ -23,7 +23,7 @@ export class LegendBar extends React.Component {
 
         return (
             <Legend title="Легенда">
-                <LegendThreshold 
+                <LegendThreshold
                     labelDelimiter='до'
                     labelLower='Меньше, чем '
                     scale={scaleThreshold({range: thresholdScale.range, domain: dataArray})}>
