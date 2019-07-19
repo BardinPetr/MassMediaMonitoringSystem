@@ -17,7 +17,7 @@ module.exports = {
     deploy: {
         production: {
             user: 'root',
-            host: '188.120.231.51',
+            host: require('credentials').server_ip,
             ref: 'origin/develop',
             repo: 'git@github.com:BardinPetr/MassMediaMonitoringSystem.git',
             path: '/home/root/deployment',

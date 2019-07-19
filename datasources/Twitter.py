@@ -1,16 +1,15 @@
-import json
 from datetime import datetime
-from os import path, getcwd
 
 import tweepy
+
+from settings import credentials
 
 
 class Twitter:
 
     def __init__(self):
-        a = json.load(open(path.join(getcwd().replace('datasources', ''), 'credentials.json')))
-        auth = tweepy.OAuthHandler(a['t_key'], a['t_skey'])
-        auth.set_access_token(a['t_atoken'], a['t_satoken'])
+        auth = tweepy.OAuthHandler(credentials['t_key'], credentials['t_skey'])
+        auth.set_access_token(credentials['t_atoken'], credentials['t_satoken'])
         self.api = tweepy.API(auth)
 
     @staticmethod

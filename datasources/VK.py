@@ -1,14 +1,13 @@
 import datetime
-import json
 import time
 from math import inf
-from os import path, getcwd
 
 import pymorphy2
 import vk
 
 from DB.DB import DB
 from analytics.FaceAnalyser import FaceAnalyser
+from settings import credentials
 
 morph = pymorphy2.MorphAnalyzer()
 
@@ -16,10 +15,7 @@ morph = pymorphy2.MorphAnalyzer()
 class VK:
 
     def __init__(self):
-        keys_list = json.load(open(path.join(getcwd().replace('datasources', ''), 'credentials.json')))
-        keys_list = keys_list['vk_keys']
-
-        for key in keys_list:
+        for key in credentials['vk_keys']:
             try:
                 self.session = vk.Session(access_token=key)
                 self.vkapi = vk.API(self.session)
