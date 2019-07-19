@@ -31,7 +31,7 @@ google-cloud-language==1.2.0
 googleapis-common-protos==1.6.0
 grpcio
 yandex_geocoder
-tensorflow
+tensorflow==1.5
 keras
 numpy
 pandas
