@@ -1,5 +1,7 @@
+import json
 import urllib
 from functools import reduce
+from os import path, getcwd
 
 import pymongo
 from console_progressbar import ProgressBar
@@ -8,9 +10,11 @@ from console_progressbar import ProgressBar
 class DB:
     def __init__(self):
         ''' initialization '''
+        cred = json.load(open(path.join(getcwd().replace('DB', '').replace('datasources', '').replace('analytics', '')
+                                        , 'credentials.json')))['db_pass']
         self.myclient = pymongo.MongoClient(
             'mongodb://%s:%s@188.120.231.51' % (urllib.parse.quote_plus('app'),
-                                                urllib.parse.quote_plus('FJWE*uTej58E&')))
+                                                urllib.parse.quote_plus(cred)))
         self.mydb = self.myclient['MMM']
         self.posts_collection = self.mydb['Vk_posts']
         self.news_collection = self.mydb['News']

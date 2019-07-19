@@ -166,7 +166,8 @@ export class InfoDrawer extends React.Component {
     }
 
     render() {
-        //console.log(window.innerWidth < window.innerHeight)
+        //console.log(window.innerWidth < window.innerHeight
+        if(this.props.data)
         return (
             <div>
                 <Drawer

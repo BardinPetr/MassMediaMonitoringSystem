@@ -4,8 +4,8 @@ import {hsvToHex} from "colorsys";
 import {LegendItem, LegendLabel, LegendThreshold} from '@vx/legend';
 
 const thresholdScale = {
-    range: [hsvToHex({h: -120, s: 100, v: 100}), hsvToHex({h: -96, s: 100, v: 100}), hsvToHex({h: -72, s: 100, v: 100}),
-        hsvToHex({h: -48, s: 100, v: 100}), hsvToHex({h: -24, s: 100, v: 100}), hsvToHex({h: 0, s: 100, v: 100})]
+    range: [hsvToHex({h: 0, s: 100, v: 100}), hsvToHex({h: 18, s: 100, v: 100}), hsvToHex({h: 36, s: 100, v: 100}),
+        hsvToHex({h: 54, s: 100, v: 100}), hsvToHex({h: 72, s: 100, v: 100}), hsvToHex({h: 90, s: 100, v: 100})]
 };
 
 const style = {
