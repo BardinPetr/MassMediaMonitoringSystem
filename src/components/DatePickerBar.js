@@ -54,14 +54,12 @@ export class DatePickerBar extends React.Component {
                 <div style={DivDivStyle}>
                     <CheckBox dataArray={age}
                               style={{width: 300}}
-                              defaultValue={age}
                               mode="multiple"
                               func={e => this.setState({ar: e})}>Выберите возрастный группы</CheckBox>
                 </div>
                 <div style={DivDivStyle}>
                     <CheckBox dataArray={source}
                               style={{width: 300}}
-                              defaultValue={source}
                               mode="multiple"
                               func={e => this.setState({dsr: e})}>Выберите провайдера новостей</CheckBox>
                 </div>
@@ -72,7 +70,8 @@ export class DatePickerBar extends React.Component {
                             onClick={() => this.props.onSearch({
                                 time: this.state.dates,
                                 sr: this.state.sr,
-                                ar: this.state.ar
+                                ar: this.state.ar,
+                                dsr: this.state.dsr
                             })}>
                         Search
                     </Button>
