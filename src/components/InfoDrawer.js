@@ -140,7 +140,62 @@ export class InfoDrawer extends React.Component {
         );
     }
 
+    renderChartGroup() {
+
+        let height = this.dwidth - 15 * 2, width = this.dwidth - 15 * 2;
+        var data = {ncount: 4, npolarity: 1,
+                    gcount: 2, gpolarity: 0.5,
+                    ucount: 10, upolarity: 0};
+        var data1 = [{id: 'Новости', polarity: data.npolarity, count: data.ncount}, 
+                    {id: 'Группы', polarity: data.gpolarity, count: data.gcount}, 
+                    {id: 'Люди', polarity: data.upolarity, count: data.ucount}]        
+        console.log(data1);
+        return (
+            <Bar
+                width={width}
+                height={height}
+                data={data1}
+                keys={['count']}
+                indexBy="id"
+                margin={{top: 30, right: 30, bottom: 40, left: 60}}
+                padding={0.3}
+                colors={(x) => hsvToHex({
+                    h: mapValue(x.data.polarity, 0, 1, 0, 90),
+                    s: 100,
+                    v: 100
+                })}
+                axisBottom={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legend: 'Источники',
+                    legendPosition: 'middle',
+                    legendOffset: 32
+                }}
+                axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legend: 'Количестов',
+                    legendPosition: 'middle',
+                    legendOffset: -40
+                }}
+                labelTextColor={{from: 'color', modifiers: [['darker', 1.6]]}}
+                animate={true}
+                motionStiffness={90}
+                motionDamping={15}
+            />
+        );
+    }
+
     renderContent() {
+        var age = 0, sex = 0;
+        this.props.data.sex.forEach(x => {
+            sex += x.value;
+        });
+        this.props.data.age.forEach(x => {
+            age += x.value;
+        });
         return (
             <div>
                 <Card style={{marginBottom: "10px", padding: "15px"}}>
@@ -154,12 +209,17 @@ export class InfoDrawer extends React.Component {
                         </Col>
                     </Row>
                 </Card>
-                <Card title="Распределение по полу" style={cards_style}>
+                {(sex !== 0) 
+                ? <Card title="Распределение по полу" style={cards_style}>
                     {this.renderPieSex()}
                     {this.renderChartSex()}
-                </Card>
-                <Card title="Распределение по возрастам" style={cards_style}>
+                </Card> : <div/>}
+                {(age !== 0)
+                ? <Card title="Распределение по возрастам" style={cards_style}>
                     {this.renderPieAge()}
+                </Card> : <div/>}
+                <Card title="Распределение источникам" style={cards_style}>
+                    {this.renderChartGroup()}
                 </Card>
             </div>
         )

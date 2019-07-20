@@ -5942,7 +5942,7 @@ module.exports = [
             {
                 "type": "Feature",
                 "properties": {
-                    "name": "нижний новгород"
+                    "name": "нижний-новгород"
                 },
                 "geometry": {
                     "type": "LineString",
