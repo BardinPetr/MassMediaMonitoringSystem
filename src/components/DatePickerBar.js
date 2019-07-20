@@ -6,12 +6,11 @@ const {RangePicker} = DatePicker;
 
 const moment = require('moment');
 
-
 export class DatePickerBar extends React.Component {
 
     componentDidMount() {
         this.setState({dates: [moment(), moment()].map((v) => v.unix())});
-        this.setState({sr: '', ar: ''})
+        this.setState({sr: '', ar: '', dsr: ''})
     }
 
     render() {
@@ -25,9 +24,14 @@ export class DatePickerBar extends React.Component {
             textAlign: 'right',
             float: 'right'
         };
+
         const DivDivStyle = {
             margin: '10px 0px 0px 0px',
         };
+
+        const gender = ['Женщины', 'Мужчины', 'Группы'];
+        const age = ['0-14', '15-21', '22-35', '36-50', '51+'];
+        const source = ['Vk', 'News']
         return (
             <div style={DivStyle}>
                 <div style={{textAlign: 'center'}}>
@@ -42,14 +46,24 @@ export class DatePickerBar extends React.Component {
                         separator=" ~ "/>
                 </div>
                 <div style={DivDivStyle}>
-                    <CheckBox dataArray={['Женщины', 'Мужчины', 'Группы']}
+                    <CheckBox dataArray={gender}
                               style={{width: 300}}
-                              func={e => this.setState({sr: e})}>Выберите половые группы</CheckBox>
+                              mode="multiple"
+                              func={e => this.setState({sr: e})}>Выберите половую группу</CheckBox>
                 </div>
                 <div style={DivDivStyle}>
-                    <CheckBox dataArray={['0-14', '15-21', '22-35', '36-50', '51+']}
+                    <CheckBox dataArray={age}
                               style={{width: 300}}
+                              defaultValue={age}
+                              mode="multiple"
                               func={e => this.setState({ar: e})}>Выберите возрастный группы</CheckBox>
+                </div>
+                <div style={DivDivStyle}>
+                    <CheckBox dataArray={source}
+                              style={{width: 300}}
+                              defaultValue={source}
+                              mode="multiple"
+                              func={e => this.setState({dsr: e})}>Выберите провайдера новостей</CheckBox>
                 </div>
                 <div style={{margin: '10px 0px 10px 0px'}}>
                     <Button type="primary"
