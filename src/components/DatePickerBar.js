@@ -31,7 +31,7 @@ export class DatePickerBar extends React.Component {
 
         const gender = ['Женщины', 'Мужчины', 'Группы'];
         const age = ['0-14', '15-21', '22-35', '36-50', '51+'];
-        const source = ['Vk', 'Новости']
+        const source = ['Vk', 'Новости'];
         return (
             <div style={DivStyle}>
                 <div style={{textAlign: 'center'}}>
