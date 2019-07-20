@@ -231,9 +231,9 @@ export default class App extends Component {
     handleMapLoaded = () => {
 
         const map = this.getMap();
-        const input = [14, 15];
-        if (input)
-        input.forEach(i => {
+        let Input = 0;
+        if (Input !== 0){
+        Input.forEach(i => {
             const str = i.toString();
             const id1 = 'Polygo' + str,
                 id2 = 'Lin' + str;
@@ -241,7 +241,7 @@ export default class App extends Component {
             map.addSource(id2, {type: 'geojson', data: Line[i]});
             map.addLayer(this.makePolygonLayer(id1, id1, "#00ff00"));
             map.addLayer(this.makeLineLayer(id2, id2, "#00ff00"));
-        });
+        });}
         else this.refreshData({time: [0, 10000000000]});
         this.setState({loaded: 1}); 
         let array = [];
@@ -274,7 +274,7 @@ export default class App extends Component {
             this.setState({boarderCity: array1});
             array.push(-1);
         });
-        console.log('Boarder City:', this.state.boarderCity)
+        console.log('Border City:', this.state.boarderCity)
         this.setState({colorCity: array, dataResponse: array});
     };
 
@@ -299,7 +299,7 @@ export default class App extends Component {
         if (dates.sr !== '') Return = {...Return, sr: dates.sr};
         if (dates.ar !== '') Return = {...Return, ar: dates.ar};
         if (dates.dsr !== '') Return = {...Return, dsr: dates.dsr};
-
+        console.log(Return)
         this.openLoading();
         axios.get('/api/clusters-sa', {
                 params: Return

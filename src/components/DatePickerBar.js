@@ -9,7 +9,7 @@ const moment = require('moment');
 export class DatePickerBar extends React.Component {
 
     componentDidMount() {
-        this.setState({dates: [moment(), moment()].map((v) => v.unix())});
+        this.setState({dates: [0, moment().unix()]});
         this.setState({sr: '', ar: '', dsr: ''})
     }
 
@@ -31,7 +31,7 @@ export class DatePickerBar extends React.Component {
 
         const gender = ['Женщины', 'Мужчины', 'Группы'];
         const age = ['0-14', '15-21', '22-35', '36-50', '51+'];
-        const source = ['Vk', 'News']
+        const source = ['Vk', 'Новости']
         return (
             <div style={DivStyle}>
                 <div style={{textAlign: 'center'}}>
@@ -72,9 +72,10 @@ export class DatePickerBar extends React.Component {
                             onClick={() => this.props.onSearch({
                                 time: this.state.dates,
                                 sr: this.state.sr,
+                                dsr: this.state.dsr,
                                 ar: this.state.ar
                             })}>
-                        Search
+                        Поиск
                     </Button>
                 </div>
             </div>
