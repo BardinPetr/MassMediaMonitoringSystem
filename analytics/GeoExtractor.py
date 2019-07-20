@@ -1,6 +1,5 @@
 import multiprocessing
 import os
-from os import path
 
 from google.cloud import language
 from google.cloud.language import enums
@@ -8,13 +7,12 @@ from google.cloud.language import types
 from yandex_geocoder import Client
 
 from pool import MyPool
+from settings import address
 
 
 class GeoExtractor:
     def __init__(self):
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = path.join(
-            os.getcwd().replace('parsers', '')
-            , 'credentials.json')
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = address + '/credentials.json'
         self.client = language.LanguageServiceClient()
 
     @staticmethod

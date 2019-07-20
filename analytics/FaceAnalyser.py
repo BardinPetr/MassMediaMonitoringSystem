@@ -1,8 +1,8 @@
-import json
 from math import inf
-from os import path, getcwd
 
 import requests
+
+from settings import credentials
 
 
 class FaceAnalyser:
@@ -13,10 +13,8 @@ class FaceAnalyser:
         'returnFaceAttributes': 'age,gender',
     }
 
-    mic_key = json.load(open(path.join(getcwd().replace('analytics', ''), 'credentials.json')))
     headers = {
-        'Ocp-Apim-Subscription-Key':
-            mic_key["microsoft_api_key"]
+        'Ocp-Apim-Subscription-Key': credentials["microsoft_api_key"]
     }
 
     @staticmethod

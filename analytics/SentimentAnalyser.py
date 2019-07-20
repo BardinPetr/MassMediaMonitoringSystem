@@ -1,6 +1,4 @@
-import os
 import pickle
-from os import path
 
 import pymorphy2
 from keras.models import load_model
@@ -9,6 +7,7 @@ from polyglot.text import Text as T
 from pyaspeller import YandexSpeller
 
 from analytics.KMetrics import precision, recall, f1
+from settings import address
 
 morph = pymorphy2.MorphAnalyzer()
 speller = YandexSpeller()
@@ -27,7 +26,7 @@ class SentimentAnalyser:
         self.mode = nn
         if nn:
             try:
-                addr = path.join(os.getcwd().replace('analytics', '').replace('DB', ''), 'dist')
+                addr = address + '/dist'
                 self.model = load_model(addr + '/model.hdf5', custom_objects=dependencies)
                 with open(addr + '/tokenizer.pickle', 'rb') as handle:
                     self.tokenizer = pickle.load(handle)

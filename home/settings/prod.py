@@ -1,9 +1,9 @@
 """Use this for production"""
-
+from settings import credentials
 from .base import *
 
 DEBUG = True
-ALLOWED_HOSTS += ['http://smartheatmap.ddns.net', 'smartheatmap.ddns.net', '188.120.231.51']
+ALLOWED_HOSTS += [credentials['server_url'], credentials['server_ip']]
 WSGI_APPLICATION = 'home.wsgi.prod.application'
 
 AUTH_PASSWORD_VALIDATORS = [

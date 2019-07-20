@@ -6,18 +6,19 @@ from os import path, getcwd
 import pymongo
 from console_progressbar import ProgressBar
 
+import settings
+
 
 class DB:
     def __init__(self):
-        ''' initialization '''
-        cred = json.load(open(path.join(getcwd().replace('DB', '').replace('datasources', '').replace('analytics', '')
-                                        , 'credentials.json')))['db_pass']
+        """ initialization """
         self.myclient = pymongo.MongoClient(
-            'mongodb://%s:%s@188.120.231.51' % (urllib.parse.quote_plus('app'),
-                                                urllib.parse.quote_plus(cred)))
+            'mongodb://%s:%s@%s' % (urllib.parse.quote_plus('app'),
+                                    urllib.parse.quote_plus(settings.credentials['db_pass']),
+                                    settings.credentials['server']))
         self.mydb = self.myclient['MMM']
         self.posts_collection = self.mydb['Vk_posts']
-        self.news_collection = self.mydb['News']
+        self.news_collection = self.mydb['Yandex_News']
         self.comments_collection = self.mydb['Comments']
         self.cache_collection = self.mydb['Cache']
         self.twits_collection = self.mydb['Twits']
@@ -58,6 +59,29 @@ class DB:
 
         return list(self
                     .posts_collection
+                    .aggregate(pipeline))
+
+    def aggregate_news(self, start, end):
+        pipeline = [
+            {
+                '$match': {
+                    '$and': [
+                        {'date': {'$gte': start}},
+                        {'date': {'$lte': end}}
+                    ]
+                }
+            },
+            {
+                '$group': {
+                    '_id': '$query',
+                    'count': {'$sum': 1},
+                    'average': {'$avg': '$polarity'}
+                }
+            }
+        ]
+
+        return list(self
+                    .news_collection
                     .aggregate(pipeline))
 
     def aggregate_posts_sa(self, start, end, age_request=None, sex_request=None):
@@ -168,9 +192,12 @@ class DB:
             },
         ]
         pre = self.posts_collection.aggregate(pipeline)
+        news = self.aggregate_news(start, end)
+
         res = []
         for i in pre:
             base = reduce(lambda x, y: [x[0] + y['count'], x[1] + y['polarity']], i['list'], [0, 0])
+            base[0] += news
             base[1] /= len(i['list'])
             slist = [{'id': 'Женщины', 'polarity': 0, 'value': 0},
                      {'id': 'Мужчины', 'polarity': 0, 'value': 0}]
@@ -205,77 +232,64 @@ class DB:
 
         return res
 
+    def add_news(self, mylist):
+        return self.news_collection.insert_many(mylist).inserted_ids
 
-def add_news(self, mylist):
-    return self.news_collection.insert_many(mylist).inserted_ids
+    def get_news(self):
+        return list(self.news_collection.find())
 
+    def add_comments(self, mylist):
+        return self.comments_collection.insert_many(mylist).inserted_ids
 
-def get_news(self):
-    return list(self.news_collection.find())
+    def get_comments(self):
+        return list(self.comments_collection.find())
 
+    def add_cache(self, query, data):
+        res = {'query': query, 'result': data}
+        return self.cache_collection.insert_one(res)
 
-def add_comments(self, mylist):
-    return self.comments_collection.insert_many(mylist).inserted_ids
+    def get_ya_news_by_cache(self, query):
+        return list(self.news_collection.find({'query': query}))
 
+    def get_vk_posts_by_cache(self, query):
+        return list(self.posts_collection.find({'query': query}))
 
-def get_comments(self):
-    return list(self.comments_collection.find())
+    def get_cache(self, query):
+        return self.cache_collection.find_one({'query': query})
 
+    def add_twits(self, mylist):
+        return self.twits_collection.insert_many(mylist).inserted_ids
 
-def add_cache(self, query, data):
-    res = {'query': query, 'result': data}
-    return self.cache_collection.insert_one(res)
+    def add_vk_users(self, mylist):
+        try:
+            return self.vk_users_collection.insert_many(mylist).inserted_ids
+        except:
+            print('nonooo')
 
+    def add_vk_user(self, element):
+        return self.vk_users_collection.insert_one(element)
 
-def get_ya_news_by_cache(self, query):
-    return list(self.news_collection.find({'query': query}))
+    def update_post(self, id, res):
+        self.posts_collection.update_one({'_id': id}, {'$set': res})
 
+    def process_sentiment():
+        from analytics.SentimentAnalyser import SentimentAnalyser
+        from time import time
 
-def get_vk_posts_by_cache(self, query):
-    return list(self.posts_collection.find({'query': query}))
+        stime = time()
 
+        sa = SentimentAnalyser(True)
+        d = DB()
 
-def get_cache(self, query):
-    return self.cache_collection.find_one({'query': query})
+        x = d.search_posts({"polarity": -2})
+        res = sa.get_polarity([i['text'] for i in x])
+        r = len(res)
 
+        print("Started for", r, "posts")
+        pb = ProgressBar(total=r - 1, prefix='Processed', decimals=3, length=50, fill='=', zfill='-')
 
-def add_twits(self, mylist):
-    return self.twits_collection.insert_many(mylist).inserted_ids
+        for i in range(r):
+            d.update_post(x[i]['_id'], {'polarity': float(res[i])})
+            pb.print_progress_bar(i)
 
-
-def add_vk_users(self, mylist):
-    try:
-        return self.vk_users_collection.insert_many(mylist).inserted_ids
-    except:
-        print('nonooo')
-
-
-def add_vk_user(self, element):
-    return self.vk_users_collection.insert_one(element)
-
-
-def update_post(self, id, res):
-    self.posts_collection.update_one({'_id': id}, {'$set': res})
-
-
-def process_sentiment():
-    from analytics.SentimentAnalyser import SentimentAnalyser
-    from time import time
-
-    stime = time()
-
-    sa = SentimentAnalyser(True)
-    d = DB()
-
-    x = d.search_posts({"polarity": -2})
-    res = sa.get_polarity([i['text'] for i in x])
-    r = len(res)
-
-    print("Started for", r, "posts")
-    pb = ProgressBar(total=r - 1, prefix='Processed', decimals=3, length=50, fill='=', zfill='-')
-
-    for i in range(r):
-        d.update_post(x[i]['_id'], {'polarity': float(res[i])})
-        pb.print_progress_bar(i)
-
-    print("Processing finished in", time() - stime)
+        print("Processing finished in", time() - stime)
