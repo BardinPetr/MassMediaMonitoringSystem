@@ -212,8 +212,8 @@ export default class App extends Component {
             map.addSource(id1, {type: 'geojson', data: d});
             map.addSource(id2, {type: 'geojson', data: Line[i]});
 
-            const center = Polygon[i].features[0].geometry.type === 'Polygon'? getGeoCenter(Polygon[i].features[0].geometry.coordinates[0]) : getGeoCenter(Polygon[i].features[0].geometry.coordinates[0][0]);
-            
+            const center = Polygon[i].features[0].geometry.type === 'Polygon' ? getGeoCenter(Polygon[i].features[0].geometry.coordinates[0]) : getGeoCenter(Polygon[i].features[0].geometry.coordinates[0][0]);
+
             this.setState({
                 mapSources: [...this.state.mapSources, id1, id2],
                 points: [...this.state.points, {geo: center, data: data[i]}]
@@ -229,42 +229,43 @@ export default class App extends Component {
                                                     data={data}/>;
 
     handleMapLoaded = () => {
-
         const map = this.getMap();
-        let Input = [];
-        if (Input !== 0){
-        Input.forEach(i => {
-            const str = i.toString();
-            const id1 = 'Polygo' + str,
-                id2 = 'Lin' + str;
-            map.addSource(id1, {type: 'geojson', data: Polygon[i]});
-            map.addSource(id2, {type: 'geojson', data: Line[i]});
-            map.addLayer(this.makePolygonLayer(id1, id1, "#00ff00"));
-            map.addLayer(this.makeLineLayer(id2, id2, "#00ff00"));
-        });}
-        else this.refreshData({time: [0, 10000000000]});
-        this.setState({loaded: 1}); 
+        let Input = 0;
+        if (Input !== 0) {
+            Input.forEach(i => {
+                const str = i.toString();
+                const id1 = 'Polygo' + str,
+                    id2 = 'Lin' + str;
+                map.addSource(id1, {type: 'geojson', data: Polygon[i]});
+                map.addSource(id2, {type: 'geojson', data: Line[i]});
+                map.addLayer(this.makePolygonLayer(id1, id1, "#00ff00"));
+                map.addLayer(this.makeLineLayer(id2, id2, "#00ff00"));
+            });
+        } else this.refreshData({time: [0, 10000000000]});
+        this.setState({loaded: 1});
         let array = [];
         Polygon.forEach((item, i) => {
             let lng_MAX = -Infinity,
                 lat_MAX = -Infinity,
                 lng_MIN = Infinity,
                 lat_MIN = Infinity;
-            
-            if(item.features[0].geometry.type === 'Polygon')
-            item.features[0].geometry.coordinates[0].forEach((item) => {
-                if (item[0] > lng_MAX) lng_MAX = item[0];
-                if (item[0] < lng_MIN) lng_MIN = item[0];
-                if (item[1] > lat_MAX) lat_MAX = item[1];
-                if (item[1] < lat_MIN) lat_MIN = item[1];
-            });
+
+            if (item.features[0].geometry.type === 'Polygon')
+                item.features[0].geometry.coordinates[0].forEach((item) => {
+                    if (item[0] > lng_MAX) lng_MAX = item[0];
+                    if (item[0] < lng_MIN) lng_MIN = item[0];
+                    if (item[1] > lat_MAX) lat_MAX = item[1];
+                    if (item[1] < lat_MIN) lat_MIN = item[1];
+                });
             else
-            item.features[0].geometry.coordinates.forEach(i => {i[0].forEach((item) => {
-                if (item[0] > lng_MAX) lng_MAX = item[0];
-                if (item[0] < lng_MIN) lng_MIN = item[0];
-                if (item[1] > lat_MAX) lat_MAX = item[1];
-                if (item[1] < lat_MIN) lat_MIN = item[1];
-            })});
+                item.features[0].geometry.coordinates.forEach(i => {
+                    i[0].forEach((item) => {
+                        if (item[0] > lng_MAX) lng_MAX = item[0];
+                        if (item[0] < lng_MIN) lng_MIN = item[0];
+                        if (item[1] > lat_MAX) lat_MAX = item[1];
+                        if (item[1] < lat_MIN) lat_MIN = item[1];
+                    })
+                });
 
             let array1 = this.state.boarderCity;
             array1.push({
@@ -274,7 +275,7 @@ export default class App extends Component {
             this.setState({boarderCity: array1});
             array.push(-1);
         });
-        console.log('Border City:', this.state.boarderCity)
+        console.log('Border City:', this.state.boarderCity);
         this.setState({colorCity: array, dataResponse: array});
     };
 
@@ -286,7 +287,7 @@ export default class App extends Component {
     closeLoading = (error) => {
         if (this.state.loadingMsg) {
             this.state.loadingMsg();
-            if (!error) message.success('Загрузкка успешно завершена', 5);
+            if (!error) message.success('Загрузка успешно завершена', 5);
             else message.error('Ошибка загрузки данных', 5);
         }
     };
@@ -299,7 +300,7 @@ export default class App extends Component {
         if (dates.sr !== '') Return = {...Return, sr: dates.sr};
         if (dates.ar !== '') Return = {...Return, ar: dates.ar};
         if (dates.dsr !== '') Return = {...Return, dsr: dates.dsr};
-        console.log(Return)
+        console.log(Return);
         this.openLoading();
         axios.get('/api/clusters-sa', {
                 params: Return

@@ -3,7 +3,7 @@ from settings import credentials
 from .base import *
 
 DEBUG = True
-ALLOWED_HOSTS += [credentials['server_url'], credentials['server_ip']]
+ALLOWED_HOSTS += credentials['server_urls'] + [credentials['server_ip']]
 WSGI_APPLICATION = 'home.wsgi.prod.application'
 
 AUTH_PASSWORD_VALIDATORS = [

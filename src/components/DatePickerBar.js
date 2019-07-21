@@ -33,7 +33,7 @@ export class DatePickerBar extends React.Component {
 
         const gender = ['Женщины', 'Мужчины', 'Группы'];
         const age = ['0-14', '15-21', '22-35', '36-50', '51+'];
-        const source = ['Vk', 'Новости']
+        const source = ['Vk', 'Новости'];
         return (
             <div style={DivStyle}>
                 <div style={{textAlign: 'center'}}>
@@ -58,7 +58,6 @@ export class DatePickerBar extends React.Component {
                 <div style={DivDivStyle}>
                     <CheckBox dataArray={age}
                               style={{width: 300}}
-                              defaultValue={age}
                               mode="multiple"
                               defaultValue={age}
                               func={e => this.setState({ar: e})}>Выберите возрастный группы</CheckBox>
@@ -66,7 +65,6 @@ export class DatePickerBar extends React.Component {
                 <div style={DivDivStyle}>
                     <CheckBox dataArray={source}
                               style={{width: 300}}
-                              defaultValue={source}
                               mode="multiple"
                               defaultValue={source}
                               func={e => this.setState({dsr: e})}>Выберите провайдера новостей</CheckBox>

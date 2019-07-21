@@ -141,14 +141,11 @@ export class InfoDrawer extends React.Component {
     }
 
     renderChartGroup() {
-
         let height = this.dwidth - 15 * 2, width = this.dwidth - 15 * 2;
-        var data = {ncount: 4, npolarity: 1,
-                    gcount: 2, gpolarity: 0.5,
-                    ucount: 10, upolarity: 0};
-        var data1 = [{id: 'Новости', polarity: data.npolarity, count: data.ncount}, 
-                    {id: 'Группы', polarity: data.gpolarity, count: data.gcount}, 
-                    {id: 'Люди', polarity: data.upolarity, count: data.ucount}]        
+        const data = this.props.data;
+        let data1 = [{id: 'Новости', polarity: data.npolarity, count: data.ncount},
+            {id: 'Группы', polarity: data.gpolarity, count: data.gcount},
+            {id: 'Люди', polarity: data.upolarity, count: data.ucount}];
         console.log(data1);
         return (
             <Bar
@@ -209,15 +206,15 @@ export class InfoDrawer extends React.Component {
                         </Col>
                     </Row>
                 </Card>
-                {(sex !== 0) 
-                ? <Card title="Распределение по полу" style={cards_style}>
-                    {this.renderPieSex()}
-                    {this.renderChartSex()}
-                </Card> : <div/>}
+                {(sex !== 0)
+                    ? <Card title="Распределение по полу" style={cards_style}>
+                        {this.renderPieSex()}
+                        {this.renderChartSex()}
+                    </Card> : <div/>}
                 {(age !== 0)
-                ? <Card title="Распределение по возрастам" style={cards_style}>
-                    {this.renderPieAge()}
-                </Card> : <div/>}
+                    ? <Card title="Распределение по возрастам" style={cards_style}>
+                        {this.renderPieAge()}
+                    </Card> : <div/>}
                 <Card title="Распределение источникам" style={cards_style}>
                     {this.renderChartGroup()}
                 </Card>
@@ -227,20 +224,20 @@ export class InfoDrawer extends React.Component {
 
     render() {
         //console.log(window.innerWidth < window.innerHeight
-        if(this.props.data)
-        return (
-            <div>
-                <Drawer
-                    width={this.dwidth + 20}
-                    title={`${this.props.data.name}`}
-                    placement="left"
-                    closable={true}
-                    visible={this.props.open}
-                    onClose={this.props.onClose}
-                >
-                    {this.props.open ? this.renderContent() : ""}
-                </Drawer>
-            </div>
-        );
+        if (this.props.data)
+            return (
+                <div>
+                    <Drawer
+                        width={Math.min(350, Math.max(window.innerWidth, this.dwidth))}
+                        title={`${this.props.data.name}`}
+                        placement="left"
+                        closable={true}
+                        visible={this.props.open}
+                        onClose={this.props.onClose}
+                    >
+                        {this.props.open ? this.renderContent() : ""}
+                    </Drawer>
+                </div>
+            );
     }
 }
