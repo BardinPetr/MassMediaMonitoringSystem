@@ -287,7 +287,7 @@ export default class App extends Component {
     closeLoading = (error) => {
         if (this.state.loadingMsg) {
             this.state.loadingMsg();
-            if (!error) message.success('Загрузкка успешно завершена', 5);
+            if (!error) message.success('Загрузка успешно завершена', 5);
             else message.error('Ошибка загрузки данных', 5);
         }
     };

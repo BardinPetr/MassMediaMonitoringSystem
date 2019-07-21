@@ -1,7 +1,6 @@
-import json
+import base64
 import urllib
 from functools import reduce
-from os import path, getcwd
 
 import pymongo
 from console_progressbar import ProgressBar
@@ -274,18 +273,21 @@ class DB:
     def get_comments(self):
         return list(self.comments_collection.find())
 
-    def add_cache(self, query, data):
-        res = {'query': query, 'result': data}
-        return self.cache_collection.insert_one(res)
-
     def get_ya_news_by_cache(self, query):
         return list(self.news_collection.find({'query': query}))
 
     def get_vk_posts_by_cache(self, query):
         return list(self.posts_collection.find({'query': query}))
 
+    @staticmethod
+    def serialize_query(*args):
+        return base64.b64encode('#'.join(list(map(str, args))).encode('utf-8')).decode('utf-8')
+
     def get_cache(self, query):
         return self.cache_collection.find_one({'query': query})
+
+    def add_cache(self, query, data):
+        return self.cache_collection.insert_one({'query': query, 'result': data})
 
     def add_twits(self, mylist):
         return self.twits_collection.insert_many(mylist).inserted_ids
