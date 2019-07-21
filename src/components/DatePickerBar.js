@@ -29,6 +29,8 @@ export class DatePickerBar extends React.Component {
             margin: '10px 0px 0px 0px',
         };
 
+        const dateFormat = "DD.MM.YY"
+
         const gender = ['Женщины', 'Мужчины', 'Группы'];
         const age = ['0-14', '15-21', '22-35', '36-50', '51+'];
         const source = ['Vk', 'Новости'];
@@ -39,28 +41,32 @@ export class DatePickerBar extends React.Component {
                         showTime={{
                             hideDisabledOptions: true
                         }}
+                        defaultValue={[moment('01.07.19', dateFormat), moment('01.07.19', dateFormat)]}
                         onChange={x => this.onChange(x)}
                         onOk={x => this.onChange(x)}
                         disabledDate={(current) => current > moment()}
-                        format="DD.MM.YY"
+                        format={dateFormat}
                         separator=" ~ "/>
                 </div>
                 <div style={DivDivStyle}>
                     <CheckBox dataArray={gender}
                               style={{width: 300}}
                               mode="multiple"
+                              defaultValue={gender}
                               func={e => this.setState({sr: e})}>Выберите половую группу</CheckBox>
                 </div>
                 <div style={DivDivStyle}>
                     <CheckBox dataArray={age}
                               style={{width: 300}}
                               mode="multiple"
+                              defaultValue={age}
                               func={e => this.setState({ar: e})}>Выберите возрастный группы</CheckBox>
                 </div>
                 <div style={DivDivStyle}>
                     <CheckBox dataArray={source}
                               style={{width: 300}}
                               mode="multiple"
+                              defaultValue={source}
                               func={e => this.setState({dsr: e})}>Выберите провайдера новостей</CheckBox>
                 </div>
                 <div style={{margin: '10px 0px 10px 0px'}}>
