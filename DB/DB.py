@@ -103,7 +103,7 @@ class DB:
                                         '$lte': end
                                     }
                                 }
-                            ] + ([] if 2 in age_request else [{'owner_id': {'$gt': 0}}])
+                            ] + ([] if 2 in sex_request else [{'owner_id': {'$gt': 0}}])
                 }
             }, {
                 '$lookup': {
