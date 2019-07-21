@@ -22,7 +22,7 @@ export class LegendBar extends React.Component {
         const {dataArray} = this.props;
 
         return (
-            <Legend title="Легенда">
+            <Legend title="Тональность">
                 <LegendThreshold
                     labelDelimiter='до'
                     labelLower='Меньше, чем '

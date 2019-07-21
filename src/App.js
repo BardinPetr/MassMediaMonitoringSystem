@@ -231,7 +231,7 @@ export default class App extends Component {
     handleMapLoaded = () => {
 
         const map = this.getMap();
-        let Input = 0;
+        let Input = [];
         if (Input !== 0){
         Input.forEach(i => {
             const str = i.toString();

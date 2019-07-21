@@ -21,14 +21,14 @@ export class CheckBox extends React.Component {
     };
 
     render() {
-        const {dataArray, style, func, children} = this.props;
+        const {dataArray, style, func, children, defaultValue} = this.props;
 
         return (
             <Select
                 mode="multiple"
                 style={{...Style, ...style}}
                 placeholder={children}
-                defaultValue={[]}
+                defaultValue={defaultValue}
                 onChange={(value) => {
                     let Return = '';
                     value.forEach(item => {
