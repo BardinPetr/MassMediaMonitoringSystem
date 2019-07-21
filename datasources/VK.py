@@ -94,7 +94,7 @@ class VK:
 
                     # print(i['first_name'])
                     # print(type(i['first_name']))
-                    print(i['first_name'])
+                    # print(i['first_name'])
 
                     if morph.parse(i['first_name'])[0].tag.gender is not None:
 
