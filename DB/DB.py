@@ -195,6 +195,7 @@ class DB:
         news = self.aggregate_news(start, end)
 
         res = []
+        pre = list(pre)
         for i in pre:
             base = reduce(lambda x, y: [x[0] + y['count'], x[1] + y['polarity']],
                           i['list'] if 0 in datasources_request else [], [0, 0])
@@ -257,14 +258,15 @@ class DB:
                         'upolarity': users[1],
                         'sex': slist,
                         'age': alist})
-
         return res
 
     def add_news(self, mylist):
         return self.news_collection.insert_many(mylist).inserted_ids
 
-    def get_news(self):
-        return list(self.news_collection.find())
+    def get_news(self, query=None):
+        if query is None:
+            query = {}
+        return list(self.news_collection.find(query))
 
     def add_comments(self, mylist):
         return self.comments_collection.insert_many(mylist).inserted_ids
@@ -300,24 +302,52 @@ class DB:
     def update_post(self, id, res):
         self.posts_collection.update_one({'_id': id}, {'$set': res})
 
-    def process_sentiment():
-        from analytics.SentimentAnalyser import SentimentAnalyser
-        from time import time
+    def update_news(self, id, res):
+        self.news_collection.update_one({'_id': id}, {'$set': res})
 
-        stime = time()
 
-        sa = SentimentAnalyser(True)
-        d = DB()
+def process_sentiment():
+    from analytics.SentimentAnalyser import SentimentAnalyser
+    from time import time
 
-        x = d.search_posts({"polarity": -2})
-        res = sa.get_polarity([i['text'] for i in x])
-        r = len(res)
+    stime = time()
 
-        print("Started for", r, "posts")
-        pb = ProgressBar(total=r - 1, prefix='Processed', decimals=3, length=50, fill='=', zfill='-')
+    sa = SentimentAnalyser(True)
+    d = DB()
 
-        for i in range(r):
-            d.update_post(x[i]['_id'], {'polarity': float(res[i])})
-            pb.print_progress_bar(i)
+    x = d.search_posts({"polarity": -2})
+    res = sa.get_polarity([i['text'] for i in x])
+    r = len(res)
 
-        print("Processing finished in", time() - stime)
+    print("Started for", r, "posts")
+    pb = ProgressBar(total=r - 1, prefix='Processed', decimals=3, length=50, fill='=', zfill='-')
+
+    for i in range(r):
+        d.update_post(x[i]['_id'], {'polarity': float(res[i]), 'query': '-'.join(x[i]['query'].lower().split())})
+        pb.print_progress_bar(i)
+
+    print("Processing finished in", time() - stime)
+
+
+def process_sentiment_news():
+    from analytics.SentimentAnalyser import SentimentAnalyser
+    from time import time
+
+    stime = time()
+
+    sa = SentimentAnalyser(True)
+    d = DB()
+
+    x = d.get_news({"query": "красная-поляна"})  # "polarity": -2})
+    res = sa.get_polarity([i['text'] for i in x])
+    r = len(res)
+
+    print("Started for", r, "posts")
+    pb = ProgressBar(total=r - 1, prefix='Processed', decimals=3, length=100, fill='=', zfill='-')
+
+    for i in range(r):
+        d.update_news(x[i]['_id'],
+                      {'polarity': float(res[i]), 'query': 'роза-хутор'})  # '-'.join(x[i]['query'].lower().split())})
+        pb.print_progress_bar(i)
+
+    print("Processing finished in", time() - stime)
