@@ -53,9 +53,16 @@ class VK:
         users_list = [i['owner_id'] for i in a if i['owner_id'] > 1]
         print(len(users_list))
 
-        list_info = self.vkapi.users.get(user_ids=users_list, v=5.101, fields="sex, bdate, uid, photo_max_orig",
-                                         lang="ru")
+        list_info = []
 
+        i = 0
+        while len(list_info) < len(users_list):
+            list_info += self.vkapi.users.get(user_ids=users_list[len(list_info):len(users_list)], v=5.101, fields="sex, bdate, uid, photo_max_orig",
+                                            lang="ru")
+
+            print('list_info length: ', len(list_info))
+            i += 1
+            
         users_info = []
 
         for i in list_info:
