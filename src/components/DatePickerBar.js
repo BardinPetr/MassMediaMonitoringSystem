@@ -41,7 +41,7 @@ export class DatePickerBar extends React.Component {
                         showTime={{
                             hideDisabledOptions: true
                         }}
-                        defaultValue={[moment('01.06.19', dateFormat), moment()]}
+                        defaultValue={[moment('01.07.19', dateFormat), moment()]}
                         onChange={x => this.onChange(x)}
                         onOk={x => this.onChange(x)}
                         disabledDate={(current) => current > moment()}

@@ -340,7 +340,7 @@ def process_sentiment_news():
     sa = SentimentAnalyser(True)
     d = DB()
 
-    x = d.get_news({"query": "красная-поляна"})  # "polarity": -2})
+    x = d.get_news({"polarity": -2})
     res = sa.get_polarity([i['text'] for i in x])
     r = len(res)
 
@@ -349,7 +349,7 @@ def process_sentiment_news():
 
     for i in range(r):
         d.update_news(x[i]['_id'],
-                      {'polarity': float(res[i]), 'query': 'роза-хутор'})  # '-'.join(x[i]['query'].lower().split())})
+                      {'polarity': float(res[i]), 'query': '-'.join(x[i]['query'].lower().split())})
         pb.print_progress_bar(i)
 
     print("Processing finished in", time() - stime)
