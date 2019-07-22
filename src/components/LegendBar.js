@@ -30,7 +30,7 @@ export class LegendBar extends React.Component {
         let col = [];
         var MAX = array[(array.length - 1)];
         var MIN = array[0];
-        console.log(1, this);
+        //console.log(1, this);
         if((array.length === 1) && (array[0] !== 0)){
             MAX = this.state.tmax;
             MIN = this.state.tmin;
@@ -40,7 +40,7 @@ export class LegendBar extends React.Component {
             MIN = 0;
         }
         this.state = {tmax: MAX, tmin: MIN};
-        console.log(2, this);
+        //console.log(2, this);
         for(let i = 0; i < array.length; i++)
             col.push(hsvToHex({h: mapValue(array[i], MIN, MAX, 0, 90), s: 100, v: 100}));
         return col;
