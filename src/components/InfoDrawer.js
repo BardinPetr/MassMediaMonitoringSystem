@@ -26,7 +26,12 @@ export class InfoDrawer extends React.Component {
                 padAngle={2}
                 cornerRadius={10}
                 enableRadialLabels={false}
-                colors={(x) => ["#f739a6", "#5f00d7"][data.indexOf(x)]}
+                colors={(x) => hsvToHex({
+                    h: mapValue(x.polarity, 0, 1, 0, 90),
+                    s: 100,
+                    v: 100
+                })
+                }
                 tooltip={(x) => {
                     return (
                         <div>
@@ -34,7 +39,8 @@ export class InfoDrawer extends React.Component {
                             <br/>
                             <a>Всего: {x.value}</a>
                             <br/>
-                            <a>Ср.тональность: {(x.polarity).toFixed(2)}</a>
+                            <a>Ср.тональность:<br/>
+                            {(x.polarity * 100).toFixed(2)} %</a>
                         </div>
                     );
                 }}
@@ -67,7 +73,7 @@ export class InfoDrawer extends React.Component {
                 cornerRadius={10}
                 enableRadialLabels={false}
                 colors={(x) => hsvToHex({
-                    h: mapValue(x.polarity, 0, 1, -120, 0),
+                    h: mapValue(x.polarity, 0, 1, 0, 90),
                     s: 100,
                     v: 100
                 })
@@ -79,7 +85,8 @@ export class InfoDrawer extends React.Component {
                             <br/>
                             <a>Всего: {x.value}</a>
                             <br/>
-                            <a>Ср.тональность: {(x.polarity * 100).toFixed(2)}</a>
+                            <a>Ср.тональность:<br/>
+                            {(x.polarity * 100).toFixed(2)} %</a>
                         </div>
                     );
                 }}
@@ -111,11 +118,16 @@ export class InfoDrawer extends React.Component {
                 width={width}
                 height={height}
                 data={data}
-                keys={['polarity']}
+                keys={['value']}
                 indexBy="id"
                 margin={{top: 30, right: 30, bottom: 40, left: 60}}
                 padding={0.3}
-                colors={(x) => ["#f739a6", "#5f00d7"][data.indexOf(x.data)]}
+                colors={(x) => hsvToHex({
+                    h: mapValue(x.data.polarity, 0, 100, 0, 90),
+                    s: 100,
+                    v: 100
+                })
+                }
                 axisBottom={{
                     tickSize: 5,
                     tickPadding: 5,
@@ -181,6 +193,18 @@ export class InfoDrawer extends React.Component {
                 animate={true}
                 motionStiffness={90}
                 motionDamping={15}
+                tooltip={(x) => {
+                    return (
+                        <div>
+                            <a>{x.data.id}</a>
+                            <br/>
+                            <a>Всего: {x.value}</a>
+                            <br/>
+                            <a>Ср.тональность:<br/>
+                            {(x.data.polarity * 100).toFixed(2)} %</a>
+                        </div>
+                    );
+                }}
             />
         );
     }
@@ -201,16 +225,15 @@ export class InfoDrawer extends React.Component {
                             <Statistic title="Всего постов" value={this.props.data.count}/>
                         </Col>
                         <Col span={12}>
-                            <Statistic title="Тональность" value={(this.props.data.polarity * 100).toFixed(2)}
+                            <Statistic title="Тональность" value={(this.props.data.polarity * 100).toFixed(2).toString() + ' %'}
                                        precision={2}/>
                         </Col>
                     </Row>
                 </Card>
-                {(sex !== 0)
-                    ? <Card title="Распределение по полу" style={cards_style}>
-                        {this.renderPieSex()}
-                        {this.renderChartSex()}
-                    </Card> : <div/>}
+                {(sex !== 0) 
+                ? <Card title="Распределение по полу" style={cards_style}>
+                    {this.renderPieSex()}
+                </Card> : <div/>}
                 {(age !== 0)
                     ? <Card title="Распределение по возрастам" style={cards_style}>
                         {this.renderPieAge()}

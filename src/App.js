@@ -297,6 +297,10 @@ export default class App extends Component {
             start: dates.time[0],
             end: dates.time[1]
         };
+        if (dates.time[0] === undefined){
+            Return = {...Return, start: 0};
+            Return = {...Return, end: 10000000000};
+        }
         if (dates.sr !== '') Return = {...Return, sr: dates.sr};
         if (dates.ar !== '') Return = {...Return, ar: dates.ar};
         if (dates.dsr !== '') Return = {...Return, dsr: dates.dsr};
