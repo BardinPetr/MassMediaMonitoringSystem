@@ -38,7 +38,7 @@ export default class App extends Component {
             boarderCity: [],
             dataResponse: [],
             colorCity: [],
-            dataArray: [0, 0, 0, 0, 0, 0],
+            dataArray: [0],
             sr: '',
             ar: ''
         };
@@ -127,12 +127,17 @@ export default class App extends Component {
         const map = this.getMap();
 
         let col = [];
-        let delt = (MAX - MIN) / 5;
-        for (let i = 0; i < 6; i++) col.push((MIN + (delt * i)).toFixed(1));
-
+        let delt = (MAX - MIN) / 4;
+        col.push(parseInt(parseFloat(MIN.toFixed(1)) * 100));
+        for (let i = 1; i < 5; i++){
+            let clr = parseInt(parseFloat((MIN + (delt * i)).toFixed(1)) * 100);
+            if(col.indexOf(clr) < 0){
+                col.push(clr);
+            }
+        }
         let rt = 0;
 
-        if (MIN === Infinity) col = [0, 0, 0, 0, 0, 0];
+        if (MIN === Infinity) col = [0];
 
         for (let i = 0; i < array.length; i++) {
             if (this.state.dataResponse[i] === -1) continue;
@@ -194,7 +199,7 @@ export default class App extends Component {
             mapSources: [],
             points: [],
             dataResponse: data,
-            dataArray: [0, 0, 0, 0, 0, 0],
+            dataArray: [0],
         });
 
         let ar = [];
@@ -297,6 +302,10 @@ export default class App extends Component {
             start: dates.time[0],
             end: dates.time[1]
         };
+        if (dates.time[0] === undefined){
+            Return = {...Return, start: 0};
+            Return = {...Return, end: 10000000000};
+        }
         if (dates.sr !== '') Return = {...Return, sr: dates.sr};
         if (dates.ar !== '') Return = {...Return, ar: dates.ar};
         if (dates.dsr !== '') Return = {...Return, dsr: dates.dsr};

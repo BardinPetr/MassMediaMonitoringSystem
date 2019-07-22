@@ -2,11 +2,7 @@ import React from 'react';
 import {scaleThreshold} from '@vx/scale';
 import {hsvToHex} from "colorsys";
 import {LegendItem, LegendLabel, LegendThreshold} from '@vx/legend';
-
-const thresholdScale = {
-    range: [hsvToHex({h: 0, s: 100, v: 100}), hsvToHex({h: 18, s: 100, v: 100}), hsvToHex({h: 36, s: 100, v: 100}),
-        hsvToHex({h: 54, s: 100, v: 100}), hsvToHex({h: 72, s: 100, v: 100}), hsvToHex({h: 90, s: 100, v: 100})]
-};
+import {mapValue} from'../utils/CalcUtils'
 
 const style = {
     // zIndex: 10000,
@@ -18,15 +14,27 @@ const style = {
 
 export class LegendBar extends React.Component {
 
+    thresholdScale = (array) => {
+        let col = [];
+        let MAX = array[(array.length - 1)];
+        if(MAX === 0)MAX = 100;
+        if(array.length < 2)MAX = 100;
+        //console.log(MAX);
+        for(let i = 0; i < array.length; i++)
+            col.push(hsvToHex({h: mapValue(array[i], array[0], MAX, 0, 90), s: 100, v: 100}));
+        return col;
+    }
+
     render() {
         const {dataArray} = this.props;
+        
 
         return (
             <Legend title="Тональность">
                 <LegendThreshold
                     labelDelimiter='до'
                     labelLower='Меньше, чем '
-                    scale={scaleThreshold({range: thresholdScale.range, domain: dataArray})}>
+                    scale={scaleThreshold({range: this.thresholdScale(dataArray), domain: dataArray})}>
                     {labels => {
                         return labels.reverse().map((label, i) => {
                             const size = 15;
