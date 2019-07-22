@@ -129,9 +129,9 @@ export default class App extends Component {
         let col = [];
         let delt = (MAX - MIN) / 4;
         col.push(parseInt(parseFloat(MIN.toFixed(1)) * 100));
-        for (let i = 1; i < 5; i++){
+        for (let i = 1; i < 5; i++) {
             let clr = parseInt(parseFloat((MIN + (delt * i)).toFixed(1)) * 100);
-            if(col.indexOf(clr) < 0){
+            if (col.indexOf(clr) < 0) {
                 col.push(clr);
             }
         }
@@ -302,7 +302,7 @@ export default class App extends Component {
             start: dates.time[0],
             end: dates.time[1]
         };
-        if (dates.time[0] === undefined){
+        if (dates.time[0] === undefined) {
             Return = {...Return, start: 0};
             Return = {...Return, end: 10000000000};
         }

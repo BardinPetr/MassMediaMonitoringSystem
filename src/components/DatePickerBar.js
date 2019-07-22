@@ -29,7 +29,7 @@ export class DatePickerBar extends React.Component {
             margin: '10px 0px 0px 0px',
         };
 
-        const dateFormat = "DD.MM.YY"
+        const dateFormat = "DD.MM.YY";
 
         const gender = ['Женщины', 'Мужчины', 'Группы'];
         const age = ['0-14', '15-21', '22-35', '36-50', '51+'];
@@ -41,7 +41,7 @@ export class DatePickerBar extends React.Component {
                         showTime={{
                             hideDisabledOptions: true
                         }}
-                        defaultValue={[moment('01.07.19', dateFormat), moment('01.07.19', dateFormat)]}
+                        defaultValue={[moment('01.06.19', dateFormat), moment()]}
                         onChange={x => this.onChange(x)}
                         onOk={x => this.onChange(x)}
                         disabledDate={(current) => current > moment()}

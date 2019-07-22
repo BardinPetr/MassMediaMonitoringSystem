@@ -40,7 +40,7 @@ export class InfoDrawer extends React.Component {
                             <a>Всего: {x.value}</a>
                             <br/>
                             <a>Ср.тональность:<br/>
-                            {(x.polarity * 100).toFixed(2)} %</a>
+                                {(x.polarity * 100).toFixed(2)} %</a>
                         </div>
                     );
                 }}
@@ -86,7 +86,7 @@ export class InfoDrawer extends React.Component {
                             <a>Всего: {x.value}</a>
                             <br/>
                             <a>Ср.тональность:<br/>
-                            {(x.polarity * 100).toFixed(2)} %</a>
+                                {(x.polarity * 100).toFixed(2)} %</a>
                         </div>
                     );
                 }}
@@ -201,7 +201,7 @@ export class InfoDrawer extends React.Component {
                             <a>Всего: {x.value}</a>
                             <br/>
                             <a>Ср.тональность:<br/>
-                            {(x.data.polarity * 100).toFixed(2)} %</a>
+                                {(x.data.polarity * 100).toFixed(2)} %</a>
                         </div>
                     );
                 }}
@@ -225,15 +225,16 @@ export class InfoDrawer extends React.Component {
                             <Statistic title="Всего постов" value={this.props.data.count}/>
                         </Col>
                         <Col span={12}>
-                            <Statistic title="Тональность" value={(this.props.data.polarity * 100).toFixed(2).toString() + ' %'}
+                            <Statistic title="Тональность"
+                                       value={(this.props.data.polarity * 100).toFixed(2).toString() + ' %'}
                                        precision={2}/>
                         </Col>
                     </Row>
                 </Card>
-                {(sex !== 0) 
-                ? <Card title="Распределение по полу" style={cards_style}>
-                    {this.renderPieSex()}
-                </Card> : <div/>}
+                {(sex !== 0)
+                    ? <Card title="Распределение по полу" style={cards_style}>
+                        {this.renderPieSex()}
+                    </Card> : <div/>}
                 {(age !== 0)
                     ? <Card title="Распределение по возрастам" style={cards_style}>
                         {this.renderPieAge()}

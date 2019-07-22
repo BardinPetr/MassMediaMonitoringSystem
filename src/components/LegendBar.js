@@ -2,7 +2,7 @@ import React from 'react';
 import {scaleThreshold} from '@vx/scale';
 import {hsvToHex} from "colorsys";
 import {LegendItem, LegendLabel, LegendThreshold} from '@vx/legend';
-import {mapValue} from'../utils/CalcUtils'
+import {mapValue} from '../utils/CalcUtils'
 
 const style = {
     // zIndex: 10000,
@@ -17,20 +17,20 @@ export class LegendBar extends React.Component {
     thresholdScale = (array) => {
         let col = [];
         let MAX = array[(array.length - 1)];
-        if(MAX === 0)MAX = 100;
-        if(array.length < 2)MAX = 100;
+        if (MAX === 0) MAX = 100;
+        if (array.length < 2) MAX = 100;
         //console.log(MAX);
-        for(let i = 0; i < array.length; i++)
+        for (let i = 0; i < array.length; i++)
             col.push(hsvToHex({h: mapValue(array[i], array[0], MAX, 0, 90), s: 100, v: 100}));
         return col;
-    }
+    };
 
     render() {
         const {dataArray} = this.props;
-        
+
 
         return (
-            <Legend title="Тональность">
+            <Legend title="Тональность, %">
                 <LegendThreshold
                     labelDelimiter='до'
                     labelLower='Меньше, чем '

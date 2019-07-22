@@ -44,14 +44,17 @@ export class ControlPanel extends React.Component {
         };
 
         return (
-            <div style={(window.innerWidth < window.innerHeight) ? DivStyle2 : (window.innerHeight > 500) ? DivStyle1 : DivStyle2} className='control-panel'>
+            <div
+                style={(window.innerWidth < window.innerHeight) ? DivStyle2 : (window.innerHeight > 500) ? DivStyle1 : DivStyle2}
+                className='control-panel'>
                 <div style={DivDivStyle}>
                     <Button type="primary"
                             style={ButtonStyle}
                             onClick={() => this.props.onChange({
                                 latitude: 68.969563,
                                 longitude: 33.074540,
-                                zoom: 10})}
+                                zoom: 10
+                            })}
                     ><Icon component={Logo1}/></Button>
                 </div>
                 <div style={DivDivStyle}>
