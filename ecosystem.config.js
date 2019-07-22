@@ -13,6 +13,13 @@ module.exports = {
         env_production: {
             NODE_ENV: 'production'
         }
+    }, {
+        name: 'OnlineTestingBot',
+        interpreter: __dirname + '/venv/bin/python',
+        script: __dirname + '/bot.py',
+        instances: 1,
+        autorestart: true,
+        watch: false
     }],
     deploy: {
         production: {
