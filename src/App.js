@@ -128,10 +128,11 @@ export default class App extends Component {
 
         let col = [];
         let delt = (MAX - MIN) / 4;
-        col.push(parseInt(parseFloat(MIN.toFixed(1)) * 100));
-        for (let i = 1; i < 5; i++) {
-            let clr = parseInt(parseFloat((MIN + (delt * i)).toFixed(1)) * 100);
-            if (col.indexOf(clr) < 0) {
+        let deltdelt = (delt > 10) ? 1 : 2;
+        col.push(parseInt(parseFloat(MIN.toFixed(deltdelt)) * 100));
+        for (let i = 1; i < 5; i++){
+            let clr = parseInt(parseFloat((MIN + (delt * i)).toFixed(deltdelt)) * 100);
+            if(col.indexOf(clr) < 0){
                 col.push(clr);
             }
         }

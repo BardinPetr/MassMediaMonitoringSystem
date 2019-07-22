@@ -14,19 +14,41 @@ const style = {
 
 export class LegendBar extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.thresholdScale = this.thresholdScale.bind(this);
+        this.state = {
+            tmax: 100,
+            tmin: 0
+        }
+    };
+
+    componentDidMount() {
+    }
+
     thresholdScale = (array) => {
         let col = [];
-        let MAX = array[(array.length - 1)];
-        if (MAX === 0) MAX = 100;
-        if (array.length < 2) MAX = 100;
-        //console.log(MAX);
-        for (let i = 0; i < array.length; i++)
-            col.push(hsvToHex({h: mapValue(array[i], array[0], MAX, 0, 90), s: 100, v: 100}));
+        var MAX = array[(array.length - 1)];
+        var MIN = array[0];
+        console.log(1, this);
+        if((array.length === 1) && (array[0] !== 0)){
+            MAX = this.state.tmax;
+            MIN = this.state.tmin;
+        }
+        if((array.length === 0) || (array[0] === 0)){
+            MAX = 100;
+            MIN = 0;
+        }
+        this.state = {tmax: MAX, tmin: MIN};
+        console.log(2, this);
+        for(let i = 0; i < array.length; i++)
+            col.push(hsvToHex({h: mapValue(array[i], MIN, MAX, 0, 90), s: 100, v: 100}));
         return col;
     };
 
     render() {
         const {dataArray} = this.props;
+        let a = this.thresholdScale(dataArray);
 
 
         return (
@@ -34,7 +56,7 @@ export class LegendBar extends React.Component {
                 <LegendThreshold
                     labelDelimiter='до'
                     labelLower='Меньше, чем '
-                    scale={scaleThreshold({range: this.thresholdScale(dataArray), domain: dataArray})}>
+                    scale={scaleThreshold({range: a, domain: dataArray})}>
                     {labels => {
                         return labels.reverse().map((label, i) => {
                             const size = 15;
